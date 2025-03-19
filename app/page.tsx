@@ -74,7 +74,7 @@ export default function Home() {
 
           {/* Right Column - Preview Canvas */}
           <div className="md:col-span-2">
-            <div className="bg-white rounded-lg shadow overflow-hidden h-full flex items-center justify-center p-6 md:p-12"> {/* Added responsive padding */}
+            <div className="bg-white rounded-lg shadow overflow-hidden h-full flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12"> {/* Added responsive padding */}
               {step === 'upload' ? (
                 <div className="w-full h-full">
                   <ImageUploader />

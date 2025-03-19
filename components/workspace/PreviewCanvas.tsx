@@ -27,8 +27,8 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
       if (!containerRef.current) return;
 
       const container = containerRef.current;
-      const maxWidth = container.clientWidth - 48; // Padding
-      const maxHeight = container.clientHeight - 48; // Padding
+      const maxWidth = container.clientWidth; // Removed padding
+      const maxHeight = container.clientHeight; // Removed padding
 
       // Create a temp image to get the natural dimensions
       const img = new Image();
@@ -95,7 +95,10 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
       {/* Loading overlay */}
       {loading && (
         <div className="absolute inset-0 bg-white bg-opacity-80 flex flex-col items-center justify-center z-10 animate-fade-in">
-          <div className="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin"></div>
+          {/* Added pulsing animation to the container */}
+          <div className="animate-pulse-subtle">
+            <div className="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin"></div>
+          </div>
           <p className="mt-4 text-sm font-medium text-gray-700 animate-pulse-subtle">Generating your fashion model...</p>
         </div>
       )}

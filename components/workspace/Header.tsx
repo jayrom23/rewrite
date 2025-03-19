@@ -8,7 +8,7 @@ interface HeaderProps {
 
 export default function Header({ onHelpClick }: HeaderProps) {
   return (
-    <header className="bg-white shadow-sm py-4 px-6">
+    <header className="bg-white shadow-sm py-4 md:py-6 px-6"> {/* Added md:py-6 */}
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
@@ -18,10 +18,10 @@ export default function Header({ onHelpClick }: HeaderProps) {
         </div>
         <div className="flex items-center space-x-4">
           <span className="text-sm text-gray-500 hidden sm:inline">Powered by Gemini AI</span>
-          
+
           {/* Help button */}
           <Tooltip content="Help & Keyboard Shortcuts (Press / key)">
-            <button 
+            <button
               onClick={onHelpClick}
               className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full"
               aria-label="Help and keyboard shortcuts"
