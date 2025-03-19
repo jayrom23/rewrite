@@ -1,12 +1,14 @@
+'use client';
+
 import { useReducer, useCallback, useEffect, useState } from 'react';
-import { GeneratorState, ModelSettings } from '../types';
+import { GeneratorState, ModelSettings, GeneratorAction } from '../types';
 import { optimizeImage } from '../imageUtils';
 import { generateWithAI } from '../gemini';
 import { reportError } from '../errorHandler';
-import { 
-  saveSettings, 
-  loadSettings, 
-  saveHistory, 
+import {
+  saveSettings,
+  loadSettings,
+  saveHistory,
   loadHistory,
   saveSession,
   loadSession,
@@ -19,16 +21,16 @@ export const DEFAULT_SETTINGS: ModelSettings = {
   gender: 'Female',
   bodyType: 'Slim',
   height: 'Average',
-  
+
   // Appearance
   ageRange: 'Young adult',
   ethnicity: 'Random',
   style: 'Casual',
-  
+
   // Environment
   background: 'Studio',
   lighting: 'Natural',
-  
+
   // Style
   cameraAngle: 'Front',
   photographyStyle: 'Fashion',
@@ -46,13 +48,14 @@ const getInitialState = (): GeneratorState => {
       history: [],
       error: null,
       step: 'upload',
+      aspectRatio: null,
     };
   }
-  
+
   const savedSettings = loadSettings();
   const savedHistory = loadHistory();
   const savedSession = loadSession();
-  
+
   return {
     uploadedImage: savedSession?.uploadedImage || null,
     generatedImage: savedSession?.generatedImage || null,
@@ -61,19 +64,9 @@ const getInitialState = (): GeneratorState => {
     history: savedHistory || [],
     error: null,
     step: savedSession?.step || 'upload',
+    aspectRatio: null,
   };
 };
-
-// Define GeneratorAction type
-type GeneratorAction =
-  | { type: 'UPLOAD_IMAGE'; payload: { image: string; suggestedSettings?: Partial<ModelSettings> } }
-  | { type: 'UPDATE_SETTINGS'; payload: Partial<ModelSettings> }
-  | { type: 'GENERATION_START' }
-  | { type: 'GENERATION_SUCCESS'; payload: { image: string } }
-  | { type: 'GENERATION_ERROR'; payload: string }
-  | { type: 'UNDO' }
-  | { type: 'RESET' }
-  | { type: 'SET_STEP'; payload: GeneratorState['step'] };
 
 // Reducer function
 function generatorReducer(state: GeneratorState, action: GeneratorAction): GeneratorState {
@@ -89,7 +82,7 @@ function generatorReducer(state: GeneratorState, action: GeneratorAction): Gener
         step: 'customize',
         error: null,
       };
-      
+
     case 'UPDATE_SETTINGS':
       const newSettings = {
         ...state.settings,
@@ -101,14 +94,14 @@ function generatorReducer(state: GeneratorState, action: GeneratorAction): Gener
         ...state,
         settings: newSettings,
       };
-      
+
     case 'GENERATION_START':
       return {
         ...state,
         isGenerating: true,
         error: null,
       };
-      
+
     case 'GENERATION_SUCCESS':
       const newHistory = [
         ...state.history,
@@ -126,33 +119,33 @@ function generatorReducer(state: GeneratorState, action: GeneratorAction): Gener
         isGenerating: false,
         history: newHistory,
         step: 'export',
+        aspectRatio: action.payload.aspectRatio, // Store aspect ratio
       };
-      
     case 'GENERATION_ERROR':
       return {
         ...state,
         isGenerating: false,
         error: action.payload,
       };
-      
+
     case 'UNDO':
       if (state.history.length === 0) {
         return state;
       }
-      
+
       const previousHistory = state.history.slice(0, -1);
       const lastEntry = state.history[state.history.length - 1];
-      
+
       // Update history in storage
       saveHistory(previousHistory);
-      
+
       return {
         ...state,
         generatedImage: lastEntry.generatedImage || null,
         settings: lastEntry.settings,
         history: previousHistory,
       };
-      
+
     case 'RESET':
       // Clear storage when resetting
       clearStorage();
@@ -162,12 +155,18 @@ function generatorReducer(state: GeneratorState, action: GeneratorAction): Gener
         generatedImage: null,
         history: [],
         step: 'upload',
+        aspectRatio: null,
       };
-      
+
     case 'SET_STEP':
       return {
         ...state,
         step: action.payload
+      };
+    case 'SET_ASPECT_RATIO':
+      return {
+        ...state,
+        aspectRatio: action.payload,
       };
 
     default:
@@ -179,43 +178,52 @@ function generatorReducer(state: GeneratorState, action: GeneratorAction): Gener
 export function useGeneratorState() {
   const [state, dispatch] = useReducer(generatorReducer, getInitialState());
   const [isHydrated, setIsHydrated] = useState(false);
-  
+
   // Hydration effect - mark component as hydrated after mounting
   useEffect(() => {
     setIsHydrated(true);
   }, []);
-  
+
   // Save session on certain state changes
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    
+
     saveSession({
       uploadedImage: state.uploadedImage,
       generatedImage: state.generatedImage,
       step: state.step
     });
   }, [state.uploadedImage, state.generatedImage, state.step]);
-  
+
   const uploadImage = useCallback(async (file: File) => {
     try {
       // Optimize image client-side before storing
       const optimizedImage = await optimizeImage(file);
-      
+
       // Auto-detect optimal settings would go here in a real implementation
       // For now, just use defaults
       const suggestedSettings = {};
-      
-      dispatch({
-        type: 'UPLOAD_IMAGE',
-        payload: { 
-          image: optimizedImage,
-          suggestedSettings
-        }
-      });
+
+      // Calculate aspect ratio
+      const img = new Image();
+      img.onload = () => {
+        const aspectRatio = img.naturalWidth / img.naturalHeight;
+        dispatch({ type: 'SET_ASPECT_RATIO', payload: aspectRatio });
+        dispatch({
+          type: 'UPLOAD_IMAGE',
+          payload: {
+            image: optimizedImage,
+            suggestedSettings
+          }
+        });
+      }
+      img.src = optimizedImage;
+
+
     } catch (error) {
       // Report error to monitoring
       reportError(error, { context: 'image_upload' });
-      
+
       dispatch({
         type: 'GENERATION_ERROR',
         payload: error instanceof Error ? error.message : 'Error uploading image'
@@ -226,7 +234,7 @@ export function useGeneratorState() {
   const updateSettings = useCallback((newSettings: Partial<ModelSettings>) => {
     dispatch({ type: 'UPDATE_SETTINGS', payload: newSettings });
   }, []);
-  
+
   const generateImage = useCallback(async () => {
     if (!state.uploadedImage) {
       dispatch({
@@ -235,26 +243,34 @@ export function useGeneratorState() {
       });
       return;
     }
-    
+
     dispatch({ type: 'GENERATION_START' });
-    
+
     try {
       // Call the Gemini API to generate the image
       const result = await generateWithAI(
         state.uploadedImage,
         state.settings
       );
-      
-      dispatch({
-        type: 'GENERATION_SUCCESS',
-        payload: { image: result.image }
-      });
+
+      // Calculate aspect ratio of the *generated* image
+      const img = new Image();
+      img.onload = () => {
+        const aspectRatio = img.naturalWidth / img.naturalHeight;
+        dispatch({
+          type: 'GENERATION_SUCCESS',
+          payload: { image: result.image, aspectRatio }, // Pass aspect ratio
+        });
+      };
+      img.src = result.image;
+
+
     } catch (error) {
       // Report error to monitoring
       reportError(error, { context: 'image_generation', settings: state.settings });
-      
+
       dispatch({
-        type: 'GENERATION_ERROR', 
+        type: 'GENERATION_ERROR',
         payload: error instanceof Error ? error.message : 'Error generating image'
       });
     }
@@ -267,7 +283,7 @@ export function useGeneratorState() {
   const reset = useCallback(() => {
     dispatch({ type: 'RESET' });
   }, []);
-  
+
   return {
     ...state,
     isHydrated,  // Export hydration status

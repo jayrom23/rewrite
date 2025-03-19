@@ -10,7 +10,7 @@ interface PreviewCanvasProps {
 }
 
 export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
-  const { uploadedImage, generatedImage, isGenerating, step, error } = useGenerator();
+  const { uploadedImage, generatedImage, isGenerating, step, error, aspectRatio } = useGenerator();
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
@@ -27,32 +27,45 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
       if (!containerRef.current) return;
 
       const container = containerRef.current;
-      const maxWidth = container.clientWidth; // Removed padding
-      const maxHeight = container.clientHeight; // Removed padding
+      const maxWidth = container.clientWidth;
+      const maxHeight = container.clientHeight;
 
-      // Create a temp image to get the natural dimensions
-      const img = new Image();
-      img.onload = () => {
-        const { naturalWidth, naturalHeight } = img;
-        const ratio = naturalWidth / naturalHeight;
-
+      // Use the aspect ratio prop if available, otherwise calculate from image
+      if (aspectRatio) {
         let width = maxWidth;
-        let height = width / ratio;
+        let height = width / aspectRatio;
 
         if (height > maxHeight) {
           height = maxHeight;
-          width = height * ratio;
+          width = height * aspectRatio;
         }
 
         setImageSize({ width, height });
-      };
-      img.src = displayImage;
+      } else {
+        // Fallback: If aspect ratio is not available (shouldn't happen),
+        // create a temp image and calculate (same as before).
+        const img = new Image();
+        img.onload = () => {
+          const { naturalWidth, naturalHeight } = img;
+          const ratio = naturalWidth / naturalHeight;
+
+          let width = maxWidth;
+          let height = width / ratio;
+
+          if (height > maxHeight) {
+            height = maxHeight;
+            width = height * ratio;
+          }
+          setImageSize({width, height})
+        };
+        img.src = displayImage;
+      }
     };
 
     updateSize();
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
-  }, [displayImage]);
+  }, [displayImage, aspectRatio]);
 
   // Trigger animation when image changes
   useEffect(() => {

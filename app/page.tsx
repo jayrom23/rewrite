@@ -13,12 +13,13 @@ import { useGenerator } from '@/lib/context';
 import useKeyboardShortcuts from '@/lib/useKeyboardShortcuts';
 
 export default function Home() {
-  const { step } = useGenerator();
+  const { step, uploadedImage, generatedImage } = useGenerator();
   const [showHelpPanel, setShowHelpPanel] = useState(false);
   const [showExportPanel, setShowExportPanel] = useState(false);
   const [availableHeight, setAvailableHeight] = useState<number | undefined>(undefined);
   const headerRef = useRef<HTMLElement>(null);
   const actionBarRef = useRef<HTMLElement>(null);
+  // Ref is now on the *outer* container
   const mainContentRef = useRef<HTMLDivElement>(null);
 
     // Calculate available height for the main content area (desktop only)
@@ -103,26 +104,29 @@ export default function Home() {
         </Tooltip>
       </div>
 
-      <div className="flex-grow my-4 md:my-6 p-4 md:p-6" ref={mainContentRef}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-2" style={{ height: availableHeight ? `${availableHeight}px` : 'auto' }}>
+      {/* Master container for dynamic height */}
+      <div className="flex-grow my-4 md:my-6 p-4 md:p-6" ref={mainContentRef} style={{ height: availableHeight ? `${availableHeight}px` : 'auto' }}>
+        {/* Use flex for layout, with column on small screens, row on medium+ */}
+        <div className="flex flex-col md:flex-row gap-4 sm:gap-2 h-full">
+
           {/* Left Column - Settings Panel */}
-          <div className="md:col-span-1">
+          <div className="md:w-1/3 lg:w-1/4 flex-shrink-0">
             <div className="bg-white rounded-lg shadow overflow-hidden h-full flex flex-col">
               <SettingsPanel />
             </div>
           </div>
 
           {/* Right Column - Preview Canvas */}
-          <div className="md:col-span-2">
-            <div className="bg-white rounded-lg shadow overflow-hidden h-full flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12"> {/* Added responsive padding */}
-              {step === 'upload' ? (
-                <div className="w-full h-full">
-                  <ImageUploader />
-                </div>
-              ) : (
-                <PreviewCanvas />
-              )}
-            </div>
+          <div className="flex-grow">
+          <div className="bg-white rounded-lg shadow overflow-hidden h-full flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12">
+            {step === 'upload' ? (
+              <div className="w-full h-full">
+                <ImageUploader />
+              </div>
+            ) : (
+              <PreviewCanvas  />
+            )}
+          </div>
           </div>
         </div>
       </div>
