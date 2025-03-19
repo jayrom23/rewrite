@@ -155,7 +155,7 @@ export default function ExportPanel() {
           </div>
         )}
 
-        <div className="pt-2">
+        <div className="mt-6"> {/* Increased margin-top */}
           <Button
             onClick={handleExport}
             isLoading={isExporting}

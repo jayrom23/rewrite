@@ -73,7 +73,7 @@ export default function ActionBar({
       )}
 
       {/* Action buttons - improved responsive layout */}
-      <div className="action-bar">
+      <div className="action-bar gap-2 sm:gap-4"> {/* Increased gap on larger screens */}
         {step === 'upload' && (
           <div className="w-full text-center py-2">
             <span className="text-sm text-gray-600">Upload an image to get started</span>

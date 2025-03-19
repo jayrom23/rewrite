@@ -63,7 +63,7 @@ export default function Home() {
     <main className="flex flex-col min-h-screen">
       <Header onHelpClick={toggleHelpPanel} />
 
-      <div className="flex-grow p-4 md:p-6">
+      <div className="flex-grow my-4 md:my-6 p-4 md:p-6"> {/* Added vertical margin */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-2"> {/* Responsive gap */}
           {/* Left Column - Settings Panel */}
           <div className="md:col-span-1">
