@@ -48,9 +48,9 @@ export default function GuideTour({ forceShow = false, onCompleteId = 'complete-
   const handleDismiss = useCallback(() => {
     setShowTour(false);
     import('@/lib/eventManager').then(({ dispatchEvent }) => {
-      dispatchEvent('guide-completed', { action: onCompleteId });
+      dispatchEvent('guide-completed', { action: 'complete-guide' as any });
     });
-  }, [onCompleteId]);
+  }, []);
   
   const handleNext = useCallback(() => {
     if (currentStep < GUIDE_STEPS.length - 1) {
@@ -58,7 +58,7 @@ export default function GuideTour({ forceShow = false, onCompleteId = 'complete-
     } else {
       handleDismiss();
     }
-  }, [currentStep, handleDismiss, GUIDE_STEPS.length]);
+  }, [currentStep, handleDismiss]);
   
   const handlePrevious = useCallback(() => {
     if (currentStep > 0) {
@@ -125,7 +125,7 @@ export default function GuideTour({ forceShow = false, onCompleteId = 'complete-
     const timer = setInterval(checkElement, 500);
     
     return () => clearInterval(timer);
-  }, [showTour, currentStep, GUIDE_STEPS]);
+  }, [showTour, currentStep]);
   
   if (!showTour) return null;
 

@@ -28,16 +28,16 @@ export default function ActionBar({
     
     // Use the event manager
     import('@/lib/eventManager').then(({ dispatchEvent }) => {
-      dispatchEvent('ui-action', { action: exportActionId });
+      dispatchEvent('ui-action', { action: 'export-action' as any });
     });
-  }, [generatedImage, exportActionId]);
+  }, [generatedImage]);
 
   const closeExportPanel = useCallback(() => {
     // Use the event manager
     import('@/lib/eventManager').then(({ dispatchEvent }) => {
-      dispatchEvent('ui-action', { action: exportPanelId, show: false });
+      dispatchEvent('ui-action', { action: 'hide-export-panel' as any, show: false });
     });
-  }, [exportPanelId]);
+  }, []);
 
   // Handle generation safely
   const handleGenerate = useCallback(() => {

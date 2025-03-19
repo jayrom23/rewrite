@@ -1,21 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useCallback, useState } from 'react';
-import { KeyboardShortcut } from '@/lib/useKeyboardShortcuts';
+import { KeyboardShortcut, KEYBOARD_SHORTCUTS as DEFAULT_SHORTCUTS } from '@/lib/useKeyboardShortcuts';
 import Button from './Button';
-
-// Safely import keyboard shortcuts
-const [KEYBOARD_SHORTCUTS, setKeyboardShortcuts] = useState<KeyboardShortcut[]>([]);
-
-useEffect(() => {
-  // Dynamic import to prevent issues
-  import('@/lib/useKeyboardShortcuts').then(module => {
-    setKeyboardShortcuts(module.KEYBOARD_SHORTCUTS || []);
-  }).catch(error => {
-    console.error('Failed to load keyboard shortcuts:', error);
-    // Fallback to empty array already set in state
-  });
-}, []);
 
 interface HelpPanelProps {
   isOpen: boolean;
@@ -24,13 +11,25 @@ interface HelpPanelProps {
 
 export default function HelpPanel({ isOpen, onCloseId = 'close-help' }: HelpPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null);
+  const [shortcuts, setShortcuts] = useState<KeyboardShortcut[]>(DEFAULT_SHORTCUTS);
+  
+  // Load keyboard shortcuts
+  useEffect(() => {
+    // Dynamic import to prevent issues
+    import('@/lib/useKeyboardShortcuts').then(module => {
+      setShortcuts(module.KEYBOARD_SHORTCUTS || DEFAULT_SHORTCUTS);
+    }).catch(error => {
+      console.error('Failed to load keyboard shortcuts:', error);
+      // Keep using default shortcuts
+    });
+  }, []);
   
   // Handle close action by dispatching custom event
   const handleClose = useCallback(() => {
     import('@/lib/eventManager').then(({ dispatchEvent }) => {
-      dispatchEvent('help-action', { action: onCloseId });
+      dispatchEvent('help-action', { action: 'close-help' as any });
     });
-  }, [onCloseId]);
+  }, []);
   
   // Close when clicking outside the panel
   useEffect(() => {

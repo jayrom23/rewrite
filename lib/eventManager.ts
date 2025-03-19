@@ -22,7 +22,8 @@ export type AppEventAction =
   | 'export-action'
   | 'export'
   | 'show-export-panel'
-  | 'hide-export-panel';
+  | 'hide-export-panel'
+  | string; // Allow string for backward compatibility
 
 // Event detail type with strongly-typed action
 export interface AppEventDetail {
