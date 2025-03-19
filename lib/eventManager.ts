@@ -6,17 +6,11 @@
 
 // Event types supported by the application
 export type AppEventType = 
-  | 'guide-action'
   | 'help-action' 
-  | 'ui-action'
-  | 'guide-completed';
+  | 'ui-action';
 
 // Define all possible actions to ensure type safety
 export type AppEventAction =
-  | 'dismiss'
-  | 'next'
-  | 'prev'
-  | 'complete-guide'
   | 'close-help'
   | 'toggle-export-panel'
   | 'export-action'
