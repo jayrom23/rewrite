@@ -37,15 +37,6 @@ body {
   background: #aaa;
 }
 
-/* Guide highlight effect */
-.guide-highlight {
-  position: relative;
-  z-index: 45;
-  box-shadow: 0 0 0 4px #0ea5e980;  /* Using hex with alpha instead of rgba */
-  border-radius: 4px;
-  animation: pulse 2s infinite;
-}
-
 @keyframes pulse {
   0% {
     box-shadow: 0 0 0 0 #0ea5e9b3; /* Using hex with alpha instead of rgba */
