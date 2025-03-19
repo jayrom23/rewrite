@@ -18,32 +18,32 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
 
   // Image to display based on the current state
   const displayImage = generatedImage || uploadedImage;
-  
+
   // Calculate and set the optimal image size based on the container
   useEffect(() => {
     if (!containerRef.current || !displayImage) return;
-    
+
     const updateSize = () => {
       if (!containerRef.current) return;
-      
+
       const container = containerRef.current;
       const maxWidth = container.clientWidth - 48; // Padding
       const maxHeight = container.clientHeight - 48; // Padding
-      
+
       // Create a temp image to get the natural dimensions
       const img = new Image();
       img.onload = () => {
         const { naturalWidth, naturalHeight } = img;
         const ratio = naturalWidth / naturalHeight;
-        
+
         let width = maxWidth;
         let height = width / ratio;
-        
+
         if (height > maxHeight) {
           height = maxHeight;
           width = height * ratio;
         }
-        
+
         setImageSize({ width, height });
       };
       img.src = displayImage;
@@ -83,8 +83,8 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
   }
 
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className={`relative w-full h-full flex items-center justify-center overflow-hidden ${className}`}
     >
       {/* Generation Status - positioned at the bottom */}
@@ -109,14 +109,14 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
 
       {/* Image display */}
       {displayImage && (
-        <div 
+        <div
           className={`
             relative rounded-lg overflow-hidden shadow-lg
             transition-all duration-500 ease-in-out
             ${loading ? 'opacity-30 scale-95' : 'opacity-100 scale-100'}
             ${animateIn ? 'animate-scale-in' : 'opacity-0'}
           `}
-          style={{ 
+          style={{
             width: imageSize.width > 0 ? imageSize.width : 'auto',
             height: imageSize.height > 0 ? imageSize.height : 'auto',
           }}
@@ -127,7 +127,7 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
             className="w-full h-full object-contain transition-opacity duration-300"
             onLoad={() => setLoading(false)}
           />
-          
+
           {/* Customize overlay - show when we have an uploaded image but no generated image yet */}
           {uploadedImage && !generatedImage && step === 'customize' && !loading && (
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center p-4 animate-fade-in">
@@ -137,7 +137,7 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
               </div>
             </div>
           )}
-          
+
           {/* Image info overlay - shows metadata about the current image */}
           {displayImage && !loading && (
             <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-2 text-xs animate-slide-up">

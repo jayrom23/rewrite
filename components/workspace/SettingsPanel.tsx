@@ -44,7 +44,7 @@ export default function SettingsPanel() {
 
   // Full content once hydrated
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col settings-panel-content"> {/* Added settings-panel-content class */}
       <div className="p-4 border-b">
         <h2 className="text-lg font-medium">Settings</h2>
         <p className="text-sm text-gray-500">

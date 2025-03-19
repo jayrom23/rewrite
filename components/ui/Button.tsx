@@ -4,39 +4,41 @@ import { ReactNode, ButtonHTMLAttributes } from 'react';
 
 // Define variant types
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
-type ButtonSize = 'sm' | 'md' | 'lg';
+type ButtonSize = 'sm' | 'md' | 'lg' | 'responsive'; // Added 'responsive' size
+type ButtonWidth = 'full' | 'auto' | 'responsive'; // Added width options
 
 // Props interface
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   variant?: ButtonVariant;
   size?: ButtonSize;
+  width?: ButtonWidth; // Use width instead of fullWidth and responsive
   isLoading?: boolean;
-  fullWidth?: boolean;
-  responsive?: boolean; // Added responsive prop for mobile behavior
+  className?: string;
+  disabled?: boolean;
 }
 
 export default function Button({
   children,
   variant = 'primary',
   size = 'md',
+  width = 'auto', // Default width to 'auto'
   isLoading = false,
-  fullWidth = false,
-  responsive = true, // Default to responsive behavior
   className = '',
   disabled,
   ...props
 }: ButtonProps) {
   // Base classes
   const baseClasses = 'btn rounded-md font-medium focus:outline-none transition-all duration-200 flex items-center justify-center';
-  
+
   // Size classes
   const sizeClasses = {
     sm: 'px-3 py-1.5 text-sm min-h-[32px]',
     md: 'px-4 py-2 text-base min-h-[40px]',
     lg: 'px-6 py-3 text-lg min-h-[48px]',
+    responsive: 'px-4 py-2 text-base min-h-[40px] sm:px-6 sm:py-3 sm:text-lg sm:min-h-[48px]' // Responsive size
   };
-  
+
   // Variant classes
   const variantClasses = {
     primary: 'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-sm',
@@ -45,21 +47,23 @@ export default function Button({
     ghost: 'bg-transparent text-primary-600 hover:bg-primary-50 active:bg-primary-100',
     danger: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-offset-2',
   };
-  
+
   // Loading and disabled states
-  const stateClasses = (isLoading || disabled) 
-    ? 'opacity-70 cursor-not-allowed' 
+  const stateClasses = (isLoading || disabled)
+    ? 'opacity-70 cursor-not-allowed'
     : 'cursor-pointer';
-  
-  // Width classes
-  const widthClasses = fullWidth ? 'w-full' : '';
-  
-  // Responsive classes (will be applied at small screens if responsive=true)
-  const responsiveClasses = responsive ? 'sm:w-auto btn-responsive' : '';
-  
+
+  // Width classes - now based on 'width' prop
+  const widthClasses = {
+    full: 'w-full',
+    auto: 'w-auto',
+    responsive: 'w-full sm:w-auto' // Full width on mobile, auto on larger screens
+  }[width];
+
+
   return (
     <button
-      className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${stateClasses} ${widthClasses} ${responsiveClasses} ${className}`}
+      className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${stateClasses} ${widthClasses} ${className}`}
       disabled={isLoading || disabled}
       {...props}
     >

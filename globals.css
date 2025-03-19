@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background-start: #ffffff;
+  --background-end: #f5f7fa;
+  --content-width: min(100%, 1200px);
+  --font-scale: clamp(0.9rem, 0.85rem + 0.25vw, 1rem);
+}
+
+/* Base styles with fluid typography */
+@layer base {
+  html {
+    font-size: var(--font-scale);
+  }
+
+  body {
+    color: rgb(33, 33, 33);
+    background: linear-gradient(
+      to bottom,
+      var(--background-start),
+      var(--background-end)
+    );
+    min-height: 100vh;
+    @apply text-base antialiased;
+  }
+
+  /* Fluid headings */
+  h1 { @apply text-2xl md:text-3xl font-bold; }
+  h2 { @apply text-xl md:text-2xl font-semibold; }
+  h3 { @apply text-lg md:text-xl font-medium; }
+}
+
+/* Component styles */
+@layer components {
+  .container-fluid {
+    width: var(--content-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-md overflow-hidden transition-shadow;
+  }
+
+  .card:hover {
+    @apply shadow-lg;
+  }
+
+  /* Button styles */
+  .btn {
+    @apply inline-flex items-center justify-center transition-all duration-200;
+  }
+
+  /* Action bar styles */
+  .action-bar {
+    @apply flex flex-wrap md:flex-nowrap gap-2 md:gap-4 p-3 md:p-4;
+  }
+
+  /* Preview panel styles */
+  .preview-panel {
+    @apply aspect-square md:min-h-[500px]; /* Maintain aspect ratio and min height */
+  }
+
+  /* Settings panel content styles */
+  .settings-panel-content {
+    @apply min-h-[400px]; /* Ensure settings panel has a minimum height */
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(14, 165, 233, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(14, 165, 233, 0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .settings-panel {
+    max-height: calc(50vh - 60px);
+    overflow-y: auto;
+  }
+
+  .mobile-hidden {
+    display: none;
+  }
+
+  .mobile-full-width {
+    width: 100% !important;
+  }
+
+  .btn-responsive {
+    @apply w-full;
+  }
+}
+
+/* Small screen adjustments */
+@media (max-width: 480px) {
+  :root {
+    --font-scale: clamp(0.85rem, 0.8rem + 0.25vw, 0.9rem);
+  }
+
+  .action-bar {
+    @apply flex-col;
+  }
+}

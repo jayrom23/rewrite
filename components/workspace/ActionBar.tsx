@@ -12,8 +12,8 @@ interface ActionBarProps {
   exportActionId?: string; // Changed to string ID
 }
 
-export default function ActionBar({ 
-  exportPanelId = 'toggle-export-panel', 
+export default function ActionBar({
+  exportPanelId = 'toggle-export-panel',
   showExportPanel,
   exportActionId = 'export-action'
 }: ActionBarProps) {
@@ -25,7 +25,7 @@ export default function ActionBar({
       console.warn('Attempted to export with no generated image');
       return;
     }
-    
+
     // Use the event manager
     import('@/lib/eventManager').then(({ dispatchEvent }) => {
       dispatchEvent('ui-action', { action: 'export-action' as any });
@@ -57,7 +57,7 @@ export default function ActionBar({
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-auto scale-100 opacity-100 transition-all duration-300">
             <div className="flex justify-between items-center p-4 border-b">
               <h2 className="text-lg font-medium">Export Options</h2>
-              <button 
+              <button
                 onClick={closeExportPanel}
                 className="text-gray-500 hover:text-gray-700 transition-colors"
                 aria-label="Close export panel"
@@ -71,7 +71,7 @@ export default function ActionBar({
           </div>
         </div>
       )}
-      
+
       {/* Action buttons - improved responsive layout */}
       <div className="action-bar bg-white border-t shadow-sm">
         {step === 'upload' && (
@@ -79,18 +79,18 @@ export default function ActionBar({
             <span className="text-sm text-gray-600">Upload an image to get started</span>
           </div>
         )}
-        
+
         {step === 'customize' && (
           <div className="w-full flex justify-center">
             <Tooltip content="Generate fashion model image (Ctrl+G)">
-              <div className="w-full sm:w-auto">
-                <Button 
+              <div> {/* Removed w-full sm:w-auto wrapper - width is controlled by Button now */}
+                <Button
                   onClick={handleGenerate}
                   isLoading={isGenerating}
                   disabled={!uploadedImage}
                   className="generate-button"
-                  size="lg"
-                  responsive
+                  size="responsive" // Use responsive size
+                  width="responsive" // Use responsive width
                 >
                   Generate Image
                 </Button>
@@ -98,35 +98,34 @@ export default function ActionBar({
             </Tooltip>
           </div>
         )}
-        
+
         {step === 'export' && (
           <div className="w-full flex flex-wrap md:flex-nowrap justify-center gap-2 md:gap-4">
             <Tooltip content="Undo last generation (Ctrl+Z)">
-              <div className="w-full sm:w-auto">
-                <Button 
-                  onClick={undo} 
+              <div> {/* Removed w-full sm:w-auto wrapper - width is controlled by Button now */}
+                <Button
+                  onClick={undo}
                   variant="outline"
-                  responsive
+                  width="responsive" // Use responsive width
                 >
                   Undo
                 </Button>
               </div>
             </Tooltip>
-            
-            <Button 
-              onClick={generateImage}
-              responsive
+
+            <Button
+              width="responsive" // Use responsive width
             >
               Regenerate
             </Button>
-            
+
             <Tooltip content="Export generated image (Ctrl+E)">
-              <div className="w-full sm:w-auto">
-                <Button 
+              <div> {/* Removed w-full sm:w-auto wrapper - width is controlled by Button now */}
+                <Button
                   onClick={handleExportClick}
                   variant="primary"
                   className="export-button"
-                  responsive
+                  width="responsive" // Use responsive width
                 >
                   Export
                 </Button>
@@ -134,15 +133,15 @@ export default function ActionBar({
             </Tooltip>
           </div>
         )}
-        
+
         {(step === 'customize' || step === 'export') && (
           <div className="w-full flex justify-center mt-2 md:mt-0">
             <Tooltip content="Start over with a new image (Ctrl+R)">
-              <div className="w-full sm:w-auto">
-                <Button 
-                  onClick={reset} 
+              <div> {/* Removed w-full sm:w-auto wrapper - width is controlled by Button now */}
+                <Button
+                  onClick={reset}
                   variant="ghost"
-                  responsive
+                  width="responsive" // Use responsive width
                 >
                   Start Over
                 </Button>

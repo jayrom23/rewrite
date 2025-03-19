@@ -47,11 +47,11 @@ export default function Home() {
         setShowExportPanel(customEvent.detail.show);
       }
     };
-    
+
     // Add event listeners with updated names
     document.addEventListener('help-action', handleHelpAction);
     document.addEventListener('ui-action', handleUIAction);
-    
+
     // Remove event listeners on cleanup
     return () => {
       document.removeEventListener('help-action', handleHelpAction);
@@ -62,15 +62,15 @@ export default function Home() {
   return (
     <main className="flex flex-col min-h-screen">
       <Header onHelpClick={toggleHelpPanel} />
-      
+
       <div className="flex-grow grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
         {/* Left Column - Settings Panel */}
         <div className="md:col-span-1 bg-white rounded-lg shadow settings-panel">
           <SettingsPanel />
         </div>
-        
+
         {/* Right Column - Preview Canvas */}
-        <div className="md:col-span-2 bg-white rounded-lg shadow flex items-center justify-center">
+        <div className="md:col-span-2 bg-white rounded-lg shadow flex items-center justify-center preview-panel"> {/* Added preview-panel class */}
           {step === 'upload' ? (
             <div className="w-full h-full image-upload-area">
               <ImageUploader />
@@ -80,19 +80,17 @@ export default function Home() {
           )}
         </div>
       </div>
-      
-      <ActionBar 
+
+      <ActionBar
         exportActionId="export-action"
         exportPanelId="toggle-export-panel"
         showExportPanel={showExportPanel}
       />
-      
+
       {/* Help panel */}
       <HelpPanel isOpen={showHelpPanel} onCloseId="close-help" />
-      
 
-      
-      
+
     </main>
   );
 }
