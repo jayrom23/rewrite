@@ -6,7 +6,7 @@ export type ShortcutAction =
   | 'undo'
   | 'reset'
   | 'toggleHelp'
-  | 'exportImage';
+  | 'export';
 
 export interface KeyboardShortcut {
   key: string;
@@ -23,7 +23,7 @@ export const KEYBOARD_SHORTCUTS: KeyboardShortcut[] = [
   { key: 'z', ctrlKey: true, description: 'Undo last action', action: 'undo' },
   { key: 'r', ctrlKey: true, description: 'Reset and start over', action: 'reset' },
   { key: '/', description: 'Toggle help', action: 'toggleHelp' },
-  { key: 'e', ctrlKey: true, description: 'Export generated image', action: 'exportImage' },
+  { key: 'e', ctrlKey: true, description: 'Export generated image', action: 'export' },
 ];
 
 export default function useKeyboardShortcuts(
@@ -71,7 +71,7 @@ export default function useKeyboardShortcuts(
       case 'toggleHelp':
         onToggleHelp();
         break;
-      case 'exportImage':
+      case 'export':
         if (step === 'export' && generatedImage) {
           onExportImage();
         }

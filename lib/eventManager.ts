@@ -11,9 +11,19 @@ export type AppEventType =
   | 'ui-action'
   | 'guide-completed';
 
-// Event action types
+// Define all possible actions to ensure type safety
+export type AppEventAction =
+  | 'dismiss'
+  | 'next'
+  | 'prev'
+  | 'complete-guide'
+  | 'close-help'
+  | 'toggle-export-panel'
+  | 'export-action';
+
+// Event detail type with strongly-typed action
 export interface AppEventDetail {
-  action: string;
+  action: AppEventAction;
   [key: string]: any; // Additional properties
 }
 
@@ -24,9 +34,9 @@ export interface AppEventDetail {
  * @param callback Function to call when the event occurs
  * @returns A cleanup function to remove the listener
  */
-export function addEventListener(
+export function addEventListener<T extends AppEventDetail = AppEventDetail>(
   eventType: AppEventType,
-  callback: (detail: AppEventDetail) => void
+  callback: (detail: T) => void
 ): () => void {
   const handler = (event: Event) => {
     const customEvent = event as CustomEvent;

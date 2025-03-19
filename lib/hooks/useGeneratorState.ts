@@ -1,7 +1,8 @@
 import { useReducer, useCallback, useEffect, useState } from 'react';
-import { GeneratorState, GeneratorAction, ModelSettings } from '../types';
+import { GeneratorState, ModelSettings } from '../types';
 import { optimizeImage } from '../imageUtils';
 import { generateWithAI } from '../gemini';
+import { reportError } from '../errorHandler';
 import { 
   saveSettings, 
   loadSettings, 
@@ -212,6 +213,9 @@ export function useGeneratorState() {
         }
       });
     } catch (error) {
+      // Report error to monitoring
+      reportError(error, { context: 'image_upload' });
+      
       dispatch({
         type: 'GENERATION_ERROR',
         payload: error instanceof Error ? error.message : 'Error uploading image'
@@ -246,6 +250,9 @@ export function useGeneratorState() {
         payload: { image: result.image }
       });
     } catch (error) {
+      // Report error to monitoring
+      reportError(error, { context: 'image_generation', settings: state.settings });
+      
       dispatch({
         type: 'GENERATION_ERROR', 
         payload: error instanceof Error ? error.message : 'Error generating image'

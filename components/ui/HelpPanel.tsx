@@ -14,7 +14,9 @@ export default function HelpPanel({ isOpen, onCloseId = 'close-help' }: HelpPane
   
   // Handle close action by dispatching custom event
   const handleClose = useCallback(() => {
-    document.dispatchEvent(new CustomEvent('help-action', { detail: { action: onCloseId } }));
+    import('@/lib/eventManager').then(({ dispatchEvent }) => {
+      dispatchEvent('help-action', { action: onCloseId });
+    });
   }, [onCloseId]);
   
   // Close when clicking outside the panel

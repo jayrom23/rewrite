@@ -26,23 +26,17 @@ export default function ActionBar({
       return;
     }
     
-    try {
-      document.dispatchEvent(new CustomEvent('ui-action', { 
-        detail: { action: exportActionId }
-      }));
-    } catch (error) {
-      console.error('Error dispatching export action event:', error);
-    }
+    // Use the event manager
+    import('@/lib/eventManager').then(({ dispatchEvent }) => {
+      dispatchEvent('ui-action', { action: exportActionId });
+    });
   }, [generatedImage, exportActionId]);
 
   const closeExportPanel = useCallback(() => {
-    try {
-      document.dispatchEvent(new CustomEvent('ui-action', { 
-        detail: { action: exportPanelId, show: false }
-      }));
-    } catch (error) {
-      console.error('Error dispatching close export panel event:', error);
-    }
+    // Use the event manager
+    import('@/lib/eventManager').then(({ dispatchEvent }) => {
+      dispatchEvent('ui-action', { action: exportPanelId, show: false });
+    });
   }, [exportPanelId]);
 
   // Handle generation safely

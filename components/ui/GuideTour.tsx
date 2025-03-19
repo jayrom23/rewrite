@@ -47,7 +47,9 @@ export default function GuideTour({ forceShow = false, onCompleteId = 'complete-
   
   const handleDismiss = useCallback(() => {
     setShowTour(false);
-    document.dispatchEvent(new CustomEvent('guide-completed', { detail: { action: onCompleteId } }));
+    import('@/lib/eventManager').then(({ dispatchEvent }) => {
+      dispatchEvent('guide-completed', { action: onCompleteId });
+    });
   }, [onCompleteId]);
   
   const handleNext = useCallback(() => {
@@ -66,25 +68,26 @@ export default function GuideTour({ forceShow = false, onCompleteId = 'complete-
   
   // Add event listeners for the guide actions
   useEffect(() => {
-    const handleGuideAction = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      switch (customEvent.detail.action) {
-        case 'dismiss':
-          handleDismiss();
-          break;
-        case 'next':
-          handleNext();
-          break;
-        case 'prev':
-          handlePrevious();
-          break;
-      }
-    };
-
-    document.addEventListener('guide-action', handleGuideAction);
-    return () => {
-      document.removeEventListener('guide-action', handleGuideAction);
-    };
+    // Import dynamically to avoid SSR issues
+    import('@/lib/eventManager').then(({ addEventListener }) => {
+      const unsubscribe = addEventListener('guide-action', (detail) => {
+        switch (detail.action) {
+          case 'dismiss':
+            handleDismiss();
+            break;
+          case 'next':
+            handleNext();
+            break;
+          case 'prev':
+            handlePrevious();
+            break;
+        }
+      });
+      
+      return () => {
+        unsubscribe();
+      };
+    });
   }, [handleDismiss, handleNext, handlePrevious]);
   
   // Check if this is the first visit

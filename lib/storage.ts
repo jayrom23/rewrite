@@ -113,7 +113,25 @@ export function saveSession(state: Partial<GeneratorState>): void {
 export function loadSession(): Partial<GeneratorState> | null {
   try {
     const saved = localStorage.getItem(STORAGE_KEYS.SESSION);
-    return saved ? JSON.parse(saved) : null;
+    if (!saved) return null;
+    
+    const sessionData = JSON.parse(saved);
+    
+    // Handle the case where we only stored references to images
+    if (sessionData.hasUploadedImage !== undefined) {
+      // We have a reference-only storage
+      return {
+        // Don't return actual images, just the step
+        step: sessionData.step || 'upload',
+        // Make the frontend aware there were images that are now expired
+        uploadedImage: null,
+        generatedImage: null,
+        error: sessionData.hasUploadedImage ? 
+          'Previously uploaded images have expired. Please upload the image again.' : null
+      };
+    }
+    
+    return sessionData;
   } catch (error) {
     console.error('Error loading session:', error);
     return null;
