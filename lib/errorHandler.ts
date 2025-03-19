@@ -5,6 +5,17 @@ import { ErrorCategory, ErrorDetails } from './errorUtils';
  */
 export function setupGlobalErrorHandler() {
   if (typeof window !== 'undefined') {
+    // Expose error reporting for debugging
+    (window as any).__debug = {
+      reportError,
+      testErrorHandler: () => {
+        throw new Error('Test error from debug console');
+      },
+      testRejection: () => {
+        return Promise.reject(new Error('Test rejection from debug console'));
+      }
+    };
+    
     // Only setup in browser environment
     window.addEventListener('error', (event) => {
       console.error('Global error caught:', event.error);

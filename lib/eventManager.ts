@@ -19,7 +19,10 @@ export type AppEventAction =
   | 'complete-guide'
   | 'close-help'
   | 'toggle-export-panel'
-  | 'export-action';
+  | 'export-action'
+  | 'export'
+  | 'show-export-panel'
+  | 'hide-export-panel';
 
 // Event detail type with strongly-typed action
 export interface AppEventDetail {
@@ -57,9 +60,9 @@ export function addEventListener<T extends AppEventDetail = AppEventDetail>(
  * @param eventType The type of event to dispatch
  * @param detail Event details
  */
-export function dispatchEvent(
+export function dispatchEvent<T extends AppEventDetail = AppEventDetail>(
   eventType: AppEventType,
-  detail: AppEventDetail
+  detail: T
 ): void {
   try {
     document.dispatchEvent(new CustomEvent(eventType, { detail }));

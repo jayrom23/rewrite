@@ -112,6 +112,11 @@ export function saveSession(state: Partial<GeneratorState>): void {
  */
 export function loadSession(): Partial<GeneratorState> | null {
   try {
+    // First, test if localStorage is available
+    const testKey = '__test_storage__';
+    localStorage.setItem(testKey, 'test');
+    localStorage.removeItem(testKey);
+    
     const saved = localStorage.getItem(STORAGE_KEYS.SESSION);
     if (!saved) return null;
     
@@ -134,6 +139,12 @@ export function loadSession(): Partial<GeneratorState> | null {
     return sessionData;
   } catch (error) {
     console.error('Error loading session:', error);
+    // Clear potentially corrupted data
+    try {
+      localStorage.removeItem(STORAGE_KEYS.SESSION);
+    } catch (e) {
+      // Ignore cleanup errors
+    }
     return null;
   }
 }

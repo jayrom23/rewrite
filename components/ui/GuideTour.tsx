@@ -108,19 +108,26 @@ export default function GuideTour({ forceShow = false, onCompleteId = 'complete-
   
   // Check if target element exists
   useEffect(() => {
-    if (showTour && GUIDE_STEPS[currentStep]) {
-      const checkElement = () => {
-        const element = document.querySelector(GUIDE_STEPS[currentStep].elementSelector);
-        setElementExists(!!element);
-      };
-      
-      // Check immediately and then on a timer
-      checkElement();
-      const timer = setInterval(checkElement, 500);
-      
-      return () => clearInterval(timer);
+    if (!showTour || !GUIDE_STEPS[currentStep]) {
+      setElementExists(false);
+      return;
     }
-  }, [showTour, currentStep]);
+    
+    const selector = GUIDE_STEPS[currentStep].elementSelector;
+    
+    const checkElement = () => {
+      const element = document.querySelector(selector);
+      setElementExists(!!element);
+    };
+    
+    // Check immediately
+    checkElement();
+    
+    // Then check periodically
+    const timer = setInterval(checkElement, 500);
+    
+    return () => clearInterval(timer);
+  }, [showTour, currentStep, GUIDE_STEPS]);
 
   // Wait for the DOM to be ready before rendering the guide
   const currentTip = GUIDE_STEPS[currentStep];
