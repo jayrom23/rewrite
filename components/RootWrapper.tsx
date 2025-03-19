@@ -2,6 +2,7 @@
 
 import { ReactNode } from 'react';
 import { GeneratorProvider } from '@/lib/context';
+import { AnimationProvider } from '@/lib/animationContext';
 import AppInitializer from './AppInitializer';
 
 interface RootWrapperProps {
@@ -14,8 +15,10 @@ interface RootWrapperProps {
 export default function RootWrapper({ children }: RootWrapperProps) {
   return (
     <GeneratorProvider>
-      <AppInitializer />
-      {children}
+      <AnimationProvider>
+        <AppInitializer />
+        {children}
+      </AnimationProvider>
     </GeneratorProvider>
   );
 }

@@ -14,6 +14,7 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
+  const [animateIn, setAnimateIn] = useState(false);
 
   // Image to display based on the current state
   const displayImage = generatedImage || uploadedImage;
@@ -53,6 +54,16 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
     return () => window.removeEventListener('resize', updateSize);
   }, [displayImage]);
 
+  // Trigger animation when image changes
+  useEffect(() => {
+    if (displayImage) {
+      setAnimateIn(false);
+      // Short delay before animating in to ensure CSS transition works
+      const timer = setTimeout(() => setAnimateIn(true), 50);
+      return () => clearTimeout(timer);
+    }
+  }, [displayImage]);
+
   // Handle image loading states
   useEffect(() => {
     if (isGenerating) {
@@ -74,7 +85,7 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
   return (
     <div 
       ref={containerRef} 
-      className={`relative w-full h-full flex items-center justify-center ${className}`}
+      className={`relative w-full h-full flex items-center justify-center overflow-hidden ${className}`}
     >
       {/* Generation Status - positioned at the bottom */}
       <div className="absolute bottom-4 left-4 right-4 z-20">
@@ -83,15 +94,15 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
 
       {/* Loading overlay */}
       {loading && (
-        <div className="absolute inset-0 bg-white bg-opacity-80 flex flex-col items-center justify-center z-10">
+        <div className="absolute inset-0 bg-white bg-opacity-80 flex flex-col items-center justify-center z-10 animate-fade-in">
           <div className="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin"></div>
-          <p className="mt-4 text-sm font-medium text-gray-700">Generating your fashion model...</p>
+          <p className="mt-4 text-sm font-medium text-gray-700 animate-pulse-subtle">Generating your fashion model...</p>
         </div>
       )}
 
       {/* Error message */}
       {error && !loading && (
-        <div className="absolute bottom-0 left-0 right-0 bg-red-50 border-t border-red-200 p-3 text-center">
+        <div className="absolute bottom-0 left-0 right-0 bg-red-50 border-t border-red-200 p-3 text-center animate-slide-up">
           <p className="text-sm text-red-600">{error}</p>
         </div>
       )}
@@ -101,8 +112,9 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
         <div 
           className={`
             relative rounded-lg overflow-hidden shadow-lg
-            transition-opacity duration-300
-            ${loading ? 'opacity-30' : 'opacity-100'}
+            transition-all duration-500 ease-in-out
+            ${loading ? 'opacity-30 scale-95' : 'opacity-100 scale-100'}
+            ${animateIn ? 'animate-scale-in' : 'opacity-0'}
           `}
           style={{ 
             width: imageSize.width > 0 ? imageSize.width : 'auto',
@@ -112,14 +124,14 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
           <ProgressiveImage
             src={displayImage}
             alt={generatedImage ? "Generated fashion model" : "Uploaded product"}
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain transition-opacity duration-300"
             onLoad={() => setLoading(false)}
           />
           
           {/* Customize overlay - show when we have an uploaded image but no generated image yet */}
           {uploadedImage && !generatedImage && step === 'customize' && !loading && (
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center p-4">
-              <div className="text-center text-white max-w-xs">
+            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center p-4 animate-fade-in">
+              <div className="text-center text-white max-w-xs animate-slide-up">
                 <p className="font-medium mb-2">Customize your settings</p>
                 <p className="text-sm opacity-90">Adjust the settings in the panel to customize your fashion model, then click Generate</p>
               </div>
@@ -128,7 +140,7 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
           
           {/* Image info overlay - shows metadata about the current image */}
           {displayImage && !loading && (
-            <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-2 text-xs">
+            <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-2 text-xs animate-slide-up">
               {generatedImage ? "AI-generated fashion model" : "Uploaded product image"}
             </div>
           )}
