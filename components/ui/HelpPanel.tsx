@@ -120,7 +120,7 @@ export default function HelpPanel({ isOpen, onCloseId = 'close-help' }: HelpPane
                 </tr>
               </thead>
               <tbody>
-                {KEYBOARD_SHORTCUTS.map((shortcut, index) => (
+                {shortcuts.map((shortcut, index) => (
                   <tr key={index} className="border-t border-gray-200">
                     <td className="py-2">{shortcut.description}</td>
                     <td className="py-2">
