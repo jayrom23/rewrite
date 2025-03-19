@@ -20,10 +20,10 @@ export default function ErrorMessage({
   className = ''
 }: ErrorMessageProps) {
   const [showDetails, setShowDetails] = useState(false);
-  
+
   // Handle the error prop properly
   let errorDetails: ErrorDetails;
-  
+
   // Convert string error to ErrorDetails if needed
   if (typeof error === 'string') {
     errorDetails = {
@@ -35,7 +35,7 @@ export default function ErrorMessage({
   } else {
     errorDetails = error;
   }
-  
+
   // Icon based on error category
   const getIcon = () => {
     switch (errorDetails.category) {
@@ -59,7 +59,7 @@ export default function ErrorMessage({
         );
     }
   };
-  
+
   return (
     <div className={`bg-red-50 border border-red-200 rounded-md p-4 ${className}`}>
       <div className="flex">
@@ -71,7 +71,7 @@ export default function ErrorMessage({
             {/* Use formatErrorMessage which handles both strings and ErrorDetails */}
             {formatErrorMessage(errorDetails)}
           </div>
-          
+
           {errorDetails.technicalDetails && (
             <div className="mt-2">
               <button
@@ -80,7 +80,7 @@ export default function ErrorMessage({
               >
                 {showDetails ? 'Hide technical details' : 'Show technical details'}
               </button>
-              
+
               {showDetails && (
                 <pre className="mt-1 text-xs bg-red-100 p-2 rounded overflow-x-auto">
                   {errorDetails.technicalDetails}
@@ -88,7 +88,7 @@ export default function ErrorMessage({
               )}
             </div>
           )}
-          
+
           <div className="mt-3 flex space-x-2">
             {errorDetails.retryable && onRetry && (
               <Button
@@ -99,7 +99,7 @@ export default function ErrorMessage({
                 Try Again
               </Button>
             )}
-            
+
             {onDismiss && (
               <Button
                 size="sm"

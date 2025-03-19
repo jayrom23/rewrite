@@ -37,7 +37,7 @@ export function saveHistory(history: HistoryEntry[]): void {
   try {
     // Only save the last 10 entries to prevent storage bloat
     const recentHistory = history.slice(-10);
-    
+
     // For each history entry, we need to handle the generatedImage
     // which could be a large base64 string
     const storableHistory = recentHistory.map(entry => ({
@@ -45,7 +45,7 @@ export function saveHistory(history: HistoryEntry[]): void {
       // Store a flag indicating there was an image instead of the full base64
       generatedImage: entry.generatedImage ? true : undefined
     }));
-    
+
     localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(storableHistory));
   } catch (error) {
     console.error('Error saving history:', error);
@@ -80,10 +80,10 @@ export function saveSession(state: Partial<GeneratorState>): void {
     // Check if images are too large for localStorage
     const uploadedImageSize = getStringSizeMB(state.uploadedImage || '');
     const generatedImageSize = getStringSizeMB(state.generatedImage || '');
-    
+
     // Create session state object
     let sessionState: Record<string, any>;
-    
+
     // If total image size exceeds 4MB, don't store the full images
     if (uploadedImageSize + generatedImageSize > 4) {
       console.warn('Images too large for localStorage, storing references only');
@@ -100,7 +100,7 @@ export function saveSession(state: Partial<GeneratorState>): void {
         step: state.step
       };
     }
-    
+
     localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(sessionState));
   } catch (error) {
     console.error('Error saving session:', error);
@@ -116,12 +116,12 @@ export function loadSession(): Partial<GeneratorState> | null {
     const testKey = '__test_storage__';
     localStorage.setItem(testKey, 'test');
     localStorage.removeItem(testKey);
-    
+
     const saved = localStorage.getItem(STORAGE_KEYS.SESSION);
     if (!saved) return null;
-    
+
     const sessionData = JSON.parse(saved);
-    
+
     // Handle the case where we only stored references to images
     if (sessionData.hasUploadedImage !== undefined) {
       // We have a reference-only storage
@@ -131,11 +131,11 @@ export function loadSession(): Partial<GeneratorState> | null {
         // Make the frontend aware there were images that are now expired
         uploadedImage: null,
         generatedImage: null,
-        error: sessionData.hasUploadedImage ? 
+        error: sessionData.hasUploadedImage ?
           'Previously uploaded images have expired. Please upload the image again.' : null
       };
     }
-    
+
     return sessionData;
   } catch (error) {
     console.error('Error loading session:', error);

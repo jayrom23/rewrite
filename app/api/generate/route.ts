@@ -14,8 +14,8 @@ export async function POST(request: Request) {
     // Validation checks
     if (!image) {
       return NextResponse.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: 'No image provided',
           errorCategory: ErrorCategory.VALIDATION
         },
@@ -25,8 +25,8 @@ export async function POST(request: Request) {
 
     if (!prompt) {
       return NextResponse.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: 'No prompt provided',
           errorCategory: ErrorCategory.VALIDATION
         },
@@ -37,8 +37,8 @@ export async function POST(request: Request) {
     // Check for valid API key
     if (!process.env.GEMINI_API_KEY) {
       return NextResponse.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: 'Missing API key configuration',
           errorCategory: ErrorCategory.PERMISSION,
           suggestions: ['Configure the GEMINI_API_KEY environment variable']
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     if (process.env.NODE_ENV === 'development' && process.env.MOCK_API === 'true') {
       // Add artificial delay to simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       // Simulate random errors for testing (5% chance)
       if (Math.random() < 0.05) {
         const errorTypes = [
@@ -61,10 +61,10 @@ export async function POST(request: Request) {
           'Model not available in your region',
         ];
         const randomError = errorTypes[Math.floor(Math.random() * errorTypes.length)];
-        
+
         throw new Error(randomError);
       }
-      
+
       return NextResponse.json({
         success: true,
         image: image,
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
           responseModalities: ['Text', 'Image']
         },
       });
-        
+
       // Prepare the content parts - FIXED to match expected format
       const contents = [
         { text: prompt },  // Using the actual prompt instead of undefined enhancedPrompt
@@ -96,27 +96,27 @@ export async function POST(request: Request) {
           }
         }
       ];
-    
+
       // Set timeout to avoid hanging requests
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(() => reject(new Error('Request timed out after 45 seconds')), 45000);
       });
-    
+
       // Race the API call against the timeout
       const responseResult = await Promise.race([
         model.generateContent(contents),
         timeoutPromise
       ]);
-    
+
       // Extract text response and generated image
       let responseText = '';
       let generatedImageBase64 = null;
-    
+
       if (responseResult && responseResult.response) {
         // Updated to correctly process the response structure
         const candidate = responseResult.response.candidates[0];
         const parts = candidate?.content?.parts || [];
-        
+
         // Process each part correctly
         for (const part of parts) {
           if (part.text) {
@@ -127,7 +127,7 @@ export async function POST(request: Request) {
           }
         }
       }
-    
+
       // Return the generated image if available, otherwise return original with description
       return NextResponse.json({
         success: true,
@@ -135,19 +135,19 @@ export async function POST(request: Request) {
         message: responseText,
         settings
       });
-    
+
     } catch (apiError) {
       console.error('API error:', apiError);
-      
+
       // Check if this is a model availability issue
       const errorMessage = apiError instanceof Error ? apiError.message : String(apiError);
-      
-      if (errorMessage.includes('not found') || 
-          errorMessage.includes('not available') || 
-          errorMessage.includes('permission')) {
+
+      if (errorMessage.includes('not found') ||
+        errorMessage.includes('not available') ||
+        errorMessage.includes('permission')) {
         return NextResponse.json(
-          { 
-            success: false, 
+          {
+            success: false,
             error: 'The requested model is not available with your current API key or configuration.',
             errorCategory: ErrorCategory.PERMISSION,
             suggestions: [
@@ -155,18 +155,18 @@ export async function POST(request: Request) {
               'Check that the model is available in your region',
               'Verify your account has appropriate permissions'
             ]
-          }, 
+          },
           { status: 403 }
         );
       }
-      
+
       // Check if this is a content policy issue
-      if (errorMessage.includes('content') || 
-          errorMessage.includes('policy') || 
-          errorMessage.includes('safety')) {
+      if (errorMessage.includes('content') ||
+        errorMessage.includes('policy') ||
+        errorMessage.includes('safety')) {
         return NextResponse.json(
-          { 
-            success: false, 
+          {
+            success: false,
             error: 'Content policy violation detected.',
             errorCategory: ErrorCategory.VALIDATION,
             suggestions: [
@@ -174,29 +174,29 @@ export async function POST(request: Request) {
               'Modify your prompt to avoid policy violations',
               'Try using different language in your settings'
             ]
-          }, 
+          },
           { status: 400 }
         );
       }
-      
+
       // Generic API error
       throw apiError;
     }
-    
+
   } catch (error) {
     console.error('Generation error:', error);
-    
+
     // Categorize the error for better handling on the client
     const errorDetails = categorizeError(error);
-    
+
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: errorDetails.message,
         errorCategory: errorDetails.category,
         retryable: errorDetails.retryable,
         suggestions: errorDetails.suggestions
-      }, 
+      },
       { status: errorDetails.category === ErrorCategory.VALIDATION ? 400 : 500 }
     );
   }

@@ -38,33 +38,33 @@ export async function generateWithAI(image: string, settings: ModelSettings): Pr
         settings: getEssentialSettings(settings)
       })
     });
-    
+
     if (!response.ok) {
       // Get detailed error info from API
       let errorText = 'API request failed';
-      
+
       try {
         const errorData = await response.json();
-        errorText = typeof errorData.error === 'string' ? errorData.error : 
-                  typeof errorData.message === 'string' ? errorData.message : 
+        errorText = typeof errorData.error === 'string' ? errorData.error :
+                  typeof errorData.message === 'string' ? errorData.message :
                   `Error: ${response.status}`;
       } catch (_) {
         // Underscore indicates intentionally unused variable
         errorText = await response.text() || `HTTP error ${response.status}`;
       }
-      
+
       // Throw proper error for handling
       throw new Error(errorText);
     }
-    
+
     // Process successful response
     const result = await response.json();
-    
+
     // Check for success flag
     if (!result.success) {
       throw new Error(typeof result.error === 'string' ? result.error : 'Failed to generate image');
     }
-    
+
     // Return both the image and any message
     return {
       image: result.image,

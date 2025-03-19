@@ -15,7 +15,7 @@ export function setupGlobalErrorHandler() {
         return Promise.reject(new Error('Test rejection from debug console'));
       }
     };
-    
+
     // Only setup in browser environment
     window.addEventListener('error', (event) => {
       console.error('Global error caught:', event.error);
@@ -39,14 +39,14 @@ export function reportError(error: unknown, additionalInfo: Record<string, any> 
     // In a real app, this would send to a monitoring service like Sentry
     // For now, just log to console with some structure
     const errorDetails = extractErrorDetails(error);
-    
+
     console.group('Error Report');
     console.error('Error:', errorDetails.message);
     console.error('Category:', errorDetails.category);
     console.error('Technical Details:', errorDetails.technicalDetails);
     console.error('Additional Info:', additionalInfo);
     console.groupEnd();
-    
+
     // Future: send to monitoring service
     // Example: Sentry.captureException(error, { extra: { ...additionalInfo } });
   } catch (reportingError) {
@@ -66,8 +66,8 @@ function extractErrorDetails(error: unknown): ErrorDetails {
       retryable: false,
       technicalDetails: ''
     };
-  } 
-  
+  }
+
   if (error instanceof Error) {
     return {
       message: error.message,
@@ -76,7 +76,7 @@ function extractErrorDetails(error: unknown): ErrorDetails {
       technicalDetails: error.stack || ''
     };
   }
-  
+
   return {
     message: 'An unknown error occurred',
     category: ErrorCategory.UNKNOWN,

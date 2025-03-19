@@ -12,12 +12,12 @@ export default function PresetsPanel() {
   const { settings, updateSettings } = useGenerator();
   const [activeCategory, setActiveCategory] = useState<PresetCategory>('all');
   const [recentPresetIds, setRecentPresetIds] = useState<string[]>([]);
-  
+
   // Load recently used presets
   useEffect(() => {
     setRecentPresetIds(getRecentPresets());
   }, []);
-  
+
   // Filter presets based on active category
   const visiblePresets = (() => {
     switch (activeCategory) {
@@ -28,7 +28,7 @@ export default function PresetsPanel() {
       case 'style':
         return STYLE_PRESETS;
       case 'recent':
-        return ALL_PRESETS.filter(preset => 
+        return ALL_PRESETS.filter(preset =>
           recentPresetIds.includes(preset.id)
         );
       case 'all':
@@ -41,7 +41,7 @@ export default function PresetsPanel() {
     // Apply preset to current settings
     const newSettings = applyPreset(settings, preset);
     updateSettings(newSettings);
-    
+
     // Save to recently used
     saveRecentPreset(preset.id);
     setRecentPresetIds(getRecentPresets());
@@ -55,47 +55,47 @@ export default function PresetsPanel() {
           Quick setting combinations
         </div>
       </div>
-      
+
       {/* Category filters */}
       <div className="flex space-x-2 mb-4 overflow-x-auto pb-2">
-        <CategoryButton 
-          active={activeCategory === 'all'} 
+        <CategoryButton
+          active={activeCategory === 'all'}
           onClick={() => setActiveCategory('all')}
         >
           All
         </CategoryButton>
-        <CategoryButton 
-          active={activeCategory === 'recent'} 
+        <CategoryButton
+          active={activeCategory === 'recent'}
           onClick={() => setActiveCategory('recent')}
           disabled={recentPresetIds.length === 0}
         >
           Recent
         </CategoryButton>
-        <CategoryButton 
-          active={activeCategory === 'model'} 
+        <CategoryButton
+          active={activeCategory === 'model'}
           onClick={() => setActiveCategory('model')}
         >
           Models
         </CategoryButton>
-        <CategoryButton 
-          active={activeCategory === 'environment'} 
+        <CategoryButton
+          active={activeCategory === 'environment'}
           onClick={() => setActiveCategory('environment')}
         >
           Environments
         </CategoryButton>
-        <CategoryButton 
-          active={activeCategory === 'style'} 
+        <CategoryButton
+          active={activeCategory === 'style'}
           onClick={() => setActiveCategory('style')}
         >
           Styles
         </CategoryButton>
       </div>
-      
+
       {/* Presets grid */}
       <div className="grid grid-cols-2 gap-2 mt-2">
         {visiblePresets.length > 0 ? (
           visiblePresets.map(preset => (
-            <PresetCard 
+            <PresetCard
               key={preset.id}
               preset={preset}
               onApply={handleApplyPreset}
@@ -122,8 +122,8 @@ function CategoryButton({ children, active, onClick, disabled = false }: Categor
   return (
     <button
       className={`px-3 py-1 text-xs rounded-full whitespace-nowrap
-        ${active 
-          ? 'bg-primary-100 text-primary-800 font-medium' 
+        ${active
+          ? 'bg-primary-100 text-primary-800 font-medium'
           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}
         ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
       `}
@@ -147,11 +147,11 @@ function PresetCard({ preset, onApply }: PresetCardProps) {
         <h4 className="text-sm font-medium">{preset.name}</h4>
         <p className="text-xs text-gray-500 line-clamp-1">{preset.description}</p>
       </div>
-      
+
       <div className="flex justify-end">
         <Tooltip content="Apply these settings">
-          <Button 
-            size="sm" 
+          <Button
+            size="sm"
             variant="outline"
             onClick={() => onApply(preset)}
           >
