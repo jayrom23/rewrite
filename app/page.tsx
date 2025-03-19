@@ -63,21 +63,27 @@ export default function Home() {
     <main className="flex flex-col min-h-screen">
       <Header onHelpClick={toggleHelpPanel} />
 
-      <div className="flex-grow grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
-        {/* Left Column - Settings Panel */}
-        <div className="md:col-span-1 bg-white rounded-lg shadow settings-panel">
-          <SettingsPanel />
-        </div>
-
-        {/* Right Column - Preview Canvas */}
-        <div className="md:col-span-2 bg-white rounded-lg shadow flex items-center justify-center preview-panel"> {/* Added preview-panel class */}
-          {step === 'upload' ? (
-            <div className="w-full h-full image-upload-area">
-              <ImageUploader />
+      <div className="flex-grow p-4 md:p-6"> {/* Reduced padding for smaller screens */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Left Column - Settings Panel */}
+          <div className="md:col-span-1">
+            <div className="bg-white rounded-lg shadow overflow-hidden h-full flex flex-col"> {/* Added h-full and flex-col */}
+              <SettingsPanel />
             </div>
-          ) : (
-            <PreviewCanvas />
-          )}
+          </div>
+
+          {/* Right Column - Preview Canvas */}
+          <div className="md:col-span-2">
+            <div className="bg-white rounded-lg shadow overflow-hidden h-full flex items-center justify-center"> {/* Added h-full */}
+              {step === 'upload' ? (
+                <div className="w-full h-full">
+                  <ImageUploader />
+                </div>
+              ) : (
+                <PreviewCanvas />
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -89,8 +95,6 @@ export default function Home() {
 
       {/* Help panel */}
       <HelpPanel isOpen={showHelpPanel} onCloseId="close-help" />
-
-
     </main>
   );
 }

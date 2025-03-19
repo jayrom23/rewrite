@@ -4,15 +4,13 @@ import { ReactNode, ButtonHTMLAttributes } from 'react';
 
 // Define variant types
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
-type ButtonSize = 'sm' | 'md' | 'lg' | 'responsive'; // Added 'responsive' size
-type ButtonWidth = 'full' | 'auto' | 'responsive'; // Added width options
+type ButtonSize = 'sm' | 'md' | 'lg'; // Removed 'responsive' size
 
 // Props interface
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   variant?: ButtonVariant;
   size?: ButtonSize;
-  width?: ButtonWidth; // Use width instead of fullWidth and responsive
   isLoading?: boolean;
   className?: string;
   disabled?: boolean;
@@ -22,21 +20,19 @@ export default function Button({
   children,
   variant = 'primary',
   size = 'md',
-  width = 'auto', // Default width to 'auto'
   isLoading = false,
   className = '',
   disabled,
   ...props
 }: ButtonProps) {
   // Base classes
-  const baseClasses = 'btn rounded-md font-medium focus:outline-none transition-all duration-200 flex items-center justify-center';
+  const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium focus:outline-none transition-all duration-200';
 
-  // Size classes
+  // Size classes - simplified and made more consistent
   const sizeClasses = {
-    sm: 'px-3 py-1.5 text-sm min-h-[32px]',
-    md: 'px-4 py-2 text-base min-h-[40px]',
-    lg: 'px-6 py-3 text-lg min-h-[48px]',
-    responsive: 'px-4 py-2 text-base min-h-[40px] sm:px-6 sm:py-3 sm:text-lg sm:min-h-[48px]' // Responsive size
+    sm: 'px-3 py-1.5 text-sm',
+    md: 'px-4 py-2 text-base',
+    lg: 'px-6 py-3 text-lg',
   };
 
   // Variant classes
@@ -53,17 +49,9 @@ export default function Button({
     ? 'opacity-70 cursor-not-allowed'
     : 'cursor-pointer';
 
-  // Width classes - now based on 'width' prop
-  const widthClasses = {
-    full: 'w-full',
-    auto: 'w-auto',
-    responsive: 'w-full sm:w-auto' // Full width on mobile, auto on larger screens
-  }[width];
-
-
   return (
     <button
-      className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${stateClasses} ${widthClasses} ${className}`}
+      className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${stateClasses} ${className}`}
       disabled={isLoading || disabled}
       {...props}
     >

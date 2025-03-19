@@ -73,7 +73,7 @@ export default function ActionBar({
       )}
 
       {/* Action buttons - improved responsive layout */}
-      <div className="action-bar bg-white border-t shadow-sm">
+      <div className="action-bar">
         {step === 'upload' && (
           <div className="w-full text-center py-2">
             <span className="text-sm text-gray-600">Upload an image to get started</span>
@@ -81,73 +81,56 @@ export default function ActionBar({
         )}
 
         {step === 'customize' && (
-          <div className="w-full flex justify-center">
-            <Tooltip content="Generate fashion model image (Ctrl+G)">
-              <div> {/* Removed w-full sm:w-auto wrapper - width is controlled by Button now */}
-                <Button
-                  onClick={handleGenerate}
-                  isLoading={isGenerating}
-                  disabled={!uploadedImage}
-                  className="generate-button"
-                  size="responsive" // Use responsive size
-                  width="responsive" // Use responsive width
-                >
-                  Generate Image
-                </Button>
-              </div>
-            </Tooltip>
-          </div>
+          <Tooltip content="Generate fashion model image (Ctrl+G)">
+            <Button
+              onClick={handleGenerate}
+              isLoading={isGenerating}
+              disabled={!uploadedImage}
+              className="generate-button w-full sm:w-auto" /* Use full width on small screens, auto on larger */
+            >
+              Generate Image
+            </Button>
+          </Tooltip>
         )}
 
         {step === 'export' && (
-          <div className="w-full flex flex-wrap md:flex-nowrap justify-center gap-2 md:gap-4">
+          <>
             <Tooltip content="Undo last generation (Ctrl+Z)">
-              <div> {/* Removed w-full sm:w-auto wrapper - width is controlled by Button now */}
-                <Button
-                  onClick={undo}
-                  variant="outline"
-                  width="responsive" // Use responsive width
-                >
-                  Undo
-                </Button>
-              </div>
+              <Button
+                onClick={undo}
+                variant="outline"
+                className="w-full sm:w-auto" /* Use full width on small screens, auto on larger */
+              >
+                Undo
+              </Button>
             </Tooltip>
 
-            <Button
-              width="responsive" // Use responsive width
-            >
+            <Button className="w-full sm:w-auto">
               Regenerate
             </Button>
 
             <Tooltip content="Export generated image (Ctrl+E)">
-              <div> {/* Removed w-full sm:w-auto wrapper - width is controlled by Button now */}
-                <Button
-                  onClick={handleExportClick}
-                  variant="primary"
-                  className="export-button"
-                  width="responsive" // Use responsive width
-                >
-                  Export
-                </Button>
-              </div>
+              <Button
+                onClick={handleExportClick}
+                variant="primary"
+                className="export-button w-full sm:w-auto" /* Use full width on small screens, auto on larger */
+              >
+                Export
+              </Button>
             </Tooltip>
-          </div>
+          </>
         )}
 
         {(step === 'customize' || step === 'export') && (
-          <div className="w-full flex justify-center mt-2 md:mt-0">
-            <Tooltip content="Start over with a new image (Ctrl+R)">
-              <div> {/* Removed w-full sm:w-auto wrapper - width is controlled by Button now */}
-                <Button
-                  onClick={reset}
-                  variant="ghost"
-                  width="responsive" // Use responsive width
-                >
-                  Start Over
-                </Button>
-              </div>
-            </Tooltip>
-          </div>
+          <Tooltip content="Start over with a new image (Ctrl+R)">
+            <Button
+              onClick={reset}
+              variant="ghost"
+              className="w-full sm:w-auto" /* Use full width on small screens, auto on larger */
+            >
+              Start Over
+            </Button>
+          </Tooltip>
         )}
       </div>
     </>
