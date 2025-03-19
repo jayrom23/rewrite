@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background-start: #ffffff;
+  --background-end: #f5f7fa;
+}
+
+body {
+  color: rgb(33, 33, 33);
+  background: linear-gradient(
+    to bottom,
+    var(--background-start),
+    var(--background-end)
+  );
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+/* Guide highlight effect */
+.guide-highlight {
+  position: relative;
+  z-index: 45;
+  box-shadow: 0 0 0 4px #0ea5e980;  /* Using hex with alpha instead of rgba */
+  border-radius: 4px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 #0ea5e9b3; /* Using hex with alpha instead of rgba */
+  }
+  70% {
+    box-shadow: 0 0 0 6px #0ea5e900; /* Using hex with alpha instead of rgba */
+  }
+  100% {
+    box-shadow: 0 0 0 0 #0ea5e900; /* Using hex with alpha instead of rgba */
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .settings-panel {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  .mobile-hidden {
+    display: none;
+  }
+  
+  .mobile-full-width {
+    width: 100% !important;
+  }
+}
