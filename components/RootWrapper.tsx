@@ -17,7 +17,11 @@ export default function RootWrapper({ children }: RootWrapperProps) {
     <GeneratorProvider>
       <AnimationProvider>
         <AppInitializer />
-        {children}
+        <div className="min-h-screen flex flex-col">
+          <div className="flex-grow container-fluid mx-auto py-2 md:py-4">
+            {children}
+          </div>
+        </div>
       </AnimationProvider>
     </GeneratorProvider>
   );

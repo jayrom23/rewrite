@@ -44,7 +44,6 @@ export default function ActionBar({
     if (!isGenerating && uploadedImage) {
       generateImage().catch(error => {
         // The error will be handled by the reducer
-        // Just log it here for debugging purposes
         console.error('Error during image generation:', error);
       });
     }
@@ -54,13 +53,13 @@ export default function ActionBar({
     <>
       {/* Export panel modal */}
       {showExportPanel && generatedImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-auto scale-100 opacity-100 transition-all duration-300">
             <div className="flex justify-between items-center p-4 border-b">
               <h2 className="text-lg font-medium">Export Options</h2>
               <button 
                 onClick={closeExportPanel}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-700 transition-colors"
                 aria-label="Close export panel"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -73,63 +72,83 @@ export default function ActionBar({
         </div>
       )}
       
-      {/* Action buttons */}
-      <div className="flex items-center justify-center space-x-4 p-4 bg-white border-t">
+      {/* Action buttons - improved responsive layout */}
+      <div className="action-bar bg-white border-t shadow-sm">
         {step === 'upload' && (
-          <span className="text-sm text-gray-500">Upload an image to get started</span>
+          <div className="w-full text-center py-2">
+            <span className="text-sm text-gray-600">Upload an image to get started</span>
+          </div>
         )}
         
         {step === 'customize' && (
-          <Tooltip content="Generate fashion model image (Ctrl+G)">
-            <div>
-              <Button 
-                onClick={handleGenerate}
-                isLoading={isGenerating}
-                disabled={!uploadedImage}
-                className="generate-button"
-              >
-                Generate Image
-              </Button>
-            </div>
-          </Tooltip>
+          <div className="w-full flex justify-center">
+            <Tooltip content="Generate fashion model image (Ctrl+G)">
+              <div className="w-full sm:w-auto">
+                <Button 
+                  onClick={handleGenerate}
+                  isLoading={isGenerating}
+                  disabled={!uploadedImage}
+                  className="generate-button"
+                  size="lg"
+                  responsive
+                >
+                  Generate Image
+                </Button>
+              </div>
+            </Tooltip>
+          </div>
         )}
         
         {step === 'export' && (
-          <>
+          <div className="w-full flex flex-wrap md:flex-nowrap justify-center gap-2 md:gap-4">
             <Tooltip content="Undo last generation (Ctrl+Z)">
-              <div>
-                <Button onClick={undo} variant="outline">
+              <div className="w-full sm:w-auto">
+                <Button 
+                  onClick={undo} 
+                  variant="outline"
+                  responsive
+                >
                   Undo
                 </Button>
               </div>
             </Tooltip>
             
-            <Button onClick={generateImage}>
+            <Button 
+              onClick={generateImage}
+              responsive
+            >
               Regenerate
             </Button>
             
             <Tooltip content="Export generated image (Ctrl+E)">
-              <div>
+              <div className="w-full sm:w-auto">
                 <Button 
                   onClick={handleExportClick}
                   variant="primary"
                   className="export-button"
+                  responsive
                 >
                   Export
                 </Button>
               </div>
             </Tooltip>
-          </>
+          </div>
         )}
         
         {(step === 'customize' || step === 'export') && (
-          <Tooltip content="Start over with a new image (Ctrl+R)">
-            <div>
-              <Button onClick={reset} variant="ghost">
-                Start Over
-              </Button>
-            </div>
-          </Tooltip>
+          <div className="w-full flex justify-center mt-2 md:mt-0">
+            <Tooltip content="Start over with a new image (Ctrl+R)">
+              <div className="w-full sm:w-auto">
+                <Button 
+                  onClick={reset} 
+                  variant="ghost"
+                  responsive
+                >
+                  Start Over
+                </Button>
+              </div>
+            </Tooltip>
+          </div>
         )}
       </div>
     </>

@@ -4,7 +4,11 @@ import './globals.css';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import RootWrapper from '@/components/RootWrapper';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter'
+});
 
 export const metadata: Metadata = {
   title: 'AI Fashion Model Generator',
@@ -17,6 +21,7 @@ export const metadata: Metadata = {
     email: false,
     url: false,
   },
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
 };
 
 export default function RootLayout({
@@ -25,11 +30,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <head>
         <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
+        <meta name="theme-color" content="#ffffff" />
       </head>
-      <body className={inter.className} suppressHydrationWarning>
+      <body className={`${inter.className} text-gray-900 antialiased`} suppressHydrationWarning>
         <ErrorBoundary>
           <RootWrapper>
             {children}
