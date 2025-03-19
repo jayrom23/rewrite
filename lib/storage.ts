@@ -66,16 +66,40 @@ export function loadHistory(): HistoryEntry[] {
 }
 
 /**
+ * Get approximate size of a string in MB
+ */
+function getStringSizeMB(str: string): number {
+  return str ? (str.length * 2) / (1024 * 1024) : 0;
+}
+
+/**
  * Saves the current session state
  */
 export function saveSession(state: Partial<GeneratorState>): void {
   try {
-    // Only save specific fields to avoid storage bloat
-    const sessionState = {
-      uploadedImage: state.uploadedImage,
-      generatedImage: state.generatedImage,
-      step: state.step
-    };
+    // Check if images are too large for localStorage
+    const uploadedImageSize = getStringSizeMB(state.uploadedImage || '');
+    const generatedImageSize = getStringSizeMB(state.generatedImage || '');
+    
+    // Create session state object
+    let sessionState: Record<string, any>;
+    
+    // If total image size exceeds 4MB, don't store the full images
+    if (uploadedImageSize + generatedImageSize > 4) {
+      console.warn('Images too large for localStorage, storing references only');
+      sessionState = {
+        hasUploadedImage: !!state.uploadedImage,
+        hasGeneratedImage: !!state.generatedImage,
+        step: state.step
+      };
+    } else {
+      // Safe to store full images
+      sessionState = {
+        uploadedImage: state.uploadedImage,
+        generatedImage: state.generatedImage,
+        step: state.step
+      };
+    }
     
     localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(sessionState));
   } catch (error) {

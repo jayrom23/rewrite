@@ -43,6 +43,7 @@ interface GuideTourProps {
 export default function GuideTour({ forceShow = false, onCompleteId = 'complete-guide' }: GuideTourProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [showTour, setShowTour] = useState(false);
+  const [elementExists, setElementExists] = useState(false);
   
   const handleDismiss = useCallback(() => {
     setShowTour(false);
@@ -55,7 +56,7 @@ export default function GuideTour({ forceShow = false, onCompleteId = 'complete-
     } else {
       handleDismiss();
     }
-  }, [currentStep, handleDismiss]); // Removed GUIDE_STEPS.length dependency
+  }, [currentStep, handleDismiss, GUIDE_STEPS.length]);
   
   const handlePrevious = useCallback(() => {
     if (currentStep > 0) {
@@ -102,9 +103,28 @@ export default function GuideTour({ forceShow = false, onCompleteId = 'complete-
   
   if (!showTour) return null;
   
+  // Check if target element exists
+  useEffect(() => {
+    if (showTour && GUIDE_STEPS[currentStep]) {
+      const checkElement = () => {
+        const element = document.querySelector(GUIDE_STEPS[currentStep].elementSelector);
+        setElementExists(!!element);
+      };
+      
+      // Check immediately and then on a timer
+      checkElement();
+      const timer = setInterval(checkElement, 500);
+      
+      return () => clearInterval(timer);
+    }
+  }, [showTour, currentStep]);
+
   // Wait for the DOM to be ready before rendering the guide
   const currentTip = GUIDE_STEPS[currentStep];
-  if (!currentTip) return null;
+  if (!currentTip || !showTour) return null;
+  
+  // Don't show the guide if the target element doesn't exist yet
+  if (!elementExists) return null;
   
   return (
     <>

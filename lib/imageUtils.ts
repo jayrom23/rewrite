@@ -134,10 +134,16 @@ export async function createThumbnail(imageData: string, size = 20): Promise<str
   }
 }
 
+// Define interface for the function with cachedResult property
+interface WebPSupportFunction {
+  (): boolean;
+  cachedResult?: boolean;
+}
+
 /**
  * Check if the browser supports WebP format
  */
-export function hasWebPSupport(): boolean {
+export const hasWebPSupport: WebPSupportFunction = function(): boolean {
   // In server rendering, always return false
   if (typeof window === 'undefined') {
     return false;
@@ -158,10 +164,10 @@ export function hasWebPSupport(): boolean {
     hasWebPSupport.cachedResult = false;
     return false;
   }
-}
+};
 
-// Add property to function for caching
-hasWebPSupport.cachedResult = undefined as boolean | undefined;
+// Initialize cachedResult as undefined
+hasWebPSupport.cachedResult = undefined;
 
 /**
  * Convert an image to WebP format if supported

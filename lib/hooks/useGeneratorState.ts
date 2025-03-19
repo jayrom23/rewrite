@@ -63,6 +63,17 @@ const getInitialState = (): GeneratorState => {
   };
 };
 
+// Define GeneratorAction type
+type GeneratorAction =
+  | { type: 'UPLOAD_IMAGE'; payload: { image: string; suggestedSettings?: Partial<ModelSettings> } }
+  | { type: 'UPDATE_SETTINGS'; payload: Partial<ModelSettings> }
+  | { type: 'GENERATION_START' }
+  | { type: 'GENERATION_SUCCESS'; payload: { image: string } }
+  | { type: 'GENERATION_ERROR'; payload: string }
+  | { type: 'UNDO' }
+  | { type: 'RESET' }
+  | { type: 'SET_STEP'; payload: GeneratorState['step'] };
+
 // Reducer function
 function generatorReducer(state: GeneratorState, action: GeneratorAction): GeneratorState {
   switch (action.type) {

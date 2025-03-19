@@ -21,17 +21,28 @@ export default function ActionBar({
 
   // Safely handle export panel actions with events
   const handleExportClick = useCallback(() => {
-    if (generatedImage) {
+    if (!generatedImage) {
+      console.warn('Attempted to export with no generated image');
+      return;
+    }
+    
+    try {
       document.dispatchEvent(new CustomEvent('ui-action', { 
         detail: { action: exportActionId }
       }));
+    } catch (error) {
+      console.error('Error dispatching export action event:', error);
     }
   }, [generatedImage, exportActionId]);
 
   const closeExportPanel = useCallback(() => {
-    document.dispatchEvent(new CustomEvent('ui-action', { 
-      detail: { action: exportPanelId, show: false }
-    }));
+    try {
+      document.dispatchEvent(new CustomEvent('ui-action', { 
+        detail: { action: exportPanelId, show: false }
+      }));
+    } catch (error) {
+      console.error('Error dispatching close export panel event:', error);
+    }
   }, [exportPanelId]);
 
   // Handle generation safely
