@@ -7,7 +7,6 @@ import ActionBar from '@/components/workspace/ActionBar';
 import SettingsPanel from '@/components/workspace/SettingsPanel';
 import PreviewCanvas from '@/components/workspace/PreviewCanvas';
 import HelpPanel from '@/components/ui/HelpPanel';
-import GuideTour from '@/components/ui/GuideTour';
 import { useGenerator } from '@/lib/context';
 import useKeyboardShortcuts from '@/lib/useKeyboardShortcuts';
 
@@ -15,7 +14,6 @@ export default function Home() {
   const { step } = useGenerator();
   const [showHelpPanel, setShowHelpPanel] = useState(false);
   const [showExportPanel, setShowExportPanel] = useState(false);
-  const [showGuideTour, setShowGuideTour] = useState(true);
 
   // Toggle help panel
   const toggleHelpPanel = useCallback(() => {
@@ -39,12 +37,7 @@ export default function Home() {
         setShowHelpPanel(false);
       }
     };
-    
-    // Guide tour events
-    const handleGuideCompleted = (event: Event) => {
-      setShowGuideTour(false);
-    };
-    
+
     // ActionBar events (renamed to ui-action)
     const handleUIAction = (event: Event) => {
       const customEvent = event as CustomEvent;
@@ -57,13 +50,11 @@ export default function Home() {
     
     // Add event listeners with updated names
     document.addEventListener('help-action', handleHelpAction);
-    document.addEventListener('guide-completed', handleGuideCompleted);
     document.addEventListener('ui-action', handleUIAction);
     
     // Remove event listeners on cleanup
     return () => {
       document.removeEventListener('help-action', handleHelpAction);
-      document.removeEventListener('guide-completed', handleGuideCompleted);
       document.removeEventListener('ui-action', handleUIAction);
     };
   }, []);
@@ -99,27 +90,9 @@ export default function Home() {
       {/* Help panel */}
       <HelpPanel isOpen={showHelpPanel} onCloseId="close-help" />
       
-      {/* Guide tour for first time users */}
-      {showGuideTour && (
-        <GuideTour onCompleteId="complete-guide" />
-      )}
+
       
-      {/* Add custom CSS for the guide highlight effect */}
-      <style jsx global>{`
-        .guide-highlight {
-          position: relative;
-          z-index: 45;
-          box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.5);
-          border-radius: 4px;
-        }
-        
-        @media (max-width: 768px) {
-          .settings-panel {
-            height: 300px;
-            overflow-y: auto;
-          }
-        }
-      `}</style>
+      
     </main>
   );
 }
