@@ -1,8 +1,21 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
-import { KeyboardShortcut, KEYBOARD_SHORTCUTS } from '@/lib/useKeyboardShortcuts';
+import { useEffect, useRef, useCallback, useState } from 'react';
+import { KeyboardShortcut } from '@/lib/useKeyboardShortcuts';
 import Button from './Button';
+
+// Safely import keyboard shortcuts
+const [KEYBOARD_SHORTCUTS, setKeyboardShortcuts] = useState<KeyboardShortcut[]>([]);
+
+useEffect(() => {
+  // Dynamic import to prevent issues
+  import('@/lib/useKeyboardShortcuts').then(module => {
+    setKeyboardShortcuts(module.KEYBOARD_SHORTCUTS || []);
+  }).catch(error => {
+    console.error('Failed to load keyboard shortcuts:', error);
+    // Fallback to empty array already set in state
+  });
+}, []);
 
 interface HelpPanelProps {
   isOpen: boolean;

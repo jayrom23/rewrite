@@ -104,9 +104,7 @@ export default function GuideTour({ forceShow = false, onCompleteId = 'complete-
     }
   }, [forceShow]);
   
-  if (!showTour) return null;
-  
-  // Check if target element exists
+  // Check if target element exists - moved before conditional return
   useEffect(() => {
     if (!showTour || !GUIDE_STEPS[currentStep]) {
       setElementExists(false);
@@ -128,6 +126,8 @@ export default function GuideTour({ forceShow = false, onCompleteId = 'complete-
     
     return () => clearInterval(timer);
   }, [showTour, currentStep, GUIDE_STEPS]);
+  
+  if (!showTour) return null;
 
   // Wait for the DOM to be ready before rendering the guide
   const currentTip = GUIDE_STEPS[currentStep];

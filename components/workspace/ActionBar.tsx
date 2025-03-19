@@ -42,14 +42,11 @@ export default function ActionBar({
   // Handle generation safely
   const handleGenerate = useCallback(() => {
     if (!isGenerating && uploadedImage) {
-      try {
-        generateImage().catch(error => {
-          console.error('Error during image generation:', error);
-          // Error will be handled by the reducer
-        });
-      } catch (error) {
-        console.error('Error initiating generation:', error);
-      }
+      generateImage().catch(error => {
+        // The error will be handled by the reducer
+        // Just log it here for debugging purposes
+        console.error('Error during image generation:', error);
+      });
     }
   }, [isGenerating, uploadedImage, generateImage]);
 
