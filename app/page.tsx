@@ -63,18 +63,18 @@ export default function Home() {
     <main className="flex flex-col min-h-screen">
       <Header onHelpClick={toggleHelpPanel} />
 
-      <div className="flex-grow p-4 md:p-6"> {/* Reduced padding for smaller screens */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="flex-grow p-4 md:p-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-2"> {/* Responsive gap */}
           {/* Left Column - Settings Panel */}
           <div className="md:col-span-1">
-            <div className="bg-white rounded-lg shadow overflow-hidden h-full flex flex-col"> {/* Added h-full and flex-col */}
+            <div className="bg-white rounded-lg shadow overflow-hidden h-full flex flex-col">
               <SettingsPanel />
             </div>
           </div>
 
           {/* Right Column - Preview Canvas */}
           <div className="md:col-span-2">
-            <div className="bg-white rounded-lg shadow overflow-hidden h-full flex items-center justify-center"> {/* Added h-full */}
+            <div className="bg-white rounded-lg shadow overflow-hidden h-full flex items-center justify-center p-6 md:p-12"> {/* Added responsive padding */}
               {step === 'upload' ? (
                 <div className="w-full h-full">
                   <ImageUploader />

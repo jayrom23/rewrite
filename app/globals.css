@@ -19,17 +19,18 @@
 
   body {
     color: rgb(33, 33, 33);
+    /* Extend background to cover the entire viewport */
     background: linear-gradient(
       to bottom,
       var(--background-start),
       var(--background-end)
-    );
+    ) 0 0 / 100% 100% no-repeat;
     min-height: 100vh;
     @apply text-base antialiased;
   }
 
   /* Fluid headings */
-  h1 { @apply text-3xl md:text-4xl font-bold; } /* Increased heading sizes */
+  h1 { @apply text-3xl md:text-4xl font-bold; }
   h2 { @apply text-2xl md:text-3xl font-semibold; }
   h3 { @apply text-xl md:text-2xl font-medium; }
 }
@@ -51,8 +52,6 @@
   .card:hover {
     @apply shadow-lg;
   }
-
-  /* Button styles - removed .btn class, now handled in Button component */
 
   /* Action bar styles */
   .action-bar {
@@ -93,13 +92,14 @@
   }
 }
 
-/* Responsive adjustments */
-/* Removed max-width: 768px media query, using Tailwind's sm: prefix instead */
-
 /* Small screen adjustments */
 @media (max-width: 480px) {
   :root {
     /* Further adjusted font scale for very small screens */
     --font-scale: clamp(0.9rem, 0.85rem + 0.25vw, 1rem);
+  }
+  /* Reduce header padding on very small screens */
+  header {
+    @apply py-2;
   }
 }
