@@ -73,7 +73,7 @@ export default function ErrorMessage({
           </div>
 
           {errorDetails.technicalDetails && (
-            <div className="mt-2">
+            <div className="mt-1">
               <button
                 className="text-xs text-red-500 underline"
                 onClick={() => setShowDetails(!showDetails)}

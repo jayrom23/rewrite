@@ -64,7 +64,7 @@ export default function GenerationStatus({ className = '' }: GenerationStatusPro
   return (
     <div className={`rounded-lg bg-white shadow-lg p-4 ${className}`}>
       {isGenerating ? (
-        <div className="space-y-4">
+        <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-medium">Generating fashion model...</h3>
             <span className="text-xs text-gray-500">{Math.round(progress)}%</span>
@@ -91,7 +91,7 @@ export default function GenerationStatus({ className = '' }: GenerationStatusPro
           </div>
         </div>
       ) : error ? (
-        <div className="space-y-4">
+        <div className="space-y-2">
           {/* Important: Pass the error string to categorizeError to create an ErrorDetails object */}
           <ErrorMessage 
             error={typeof error === 'string' ? categorizeError(error) : error}

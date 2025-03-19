@@ -94,7 +94,9 @@ export default function Home() {
       />
 
       {/* Help panel */}
-      <HelpPanel isOpen={showHelpPanel} onCloseId="close-help" />
+      <div className="mt-4">
+        <HelpPanel isOpen={showHelpPanel} onCloseId="close-help" />
+      </div>
     </main>
   );
 }

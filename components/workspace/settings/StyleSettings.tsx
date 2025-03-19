@@ -20,9 +20,9 @@ export default function StyleSettings() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 px-4">
       <h3 className="text-base font-medium">Style Settings</h3>
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div>
           <Tooltip content="Select the camera angle for your model photo">
             <div>

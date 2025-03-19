@@ -92,7 +92,7 @@ export default function SettingsPanel() {
       </div>
 
       {/* Tab Content - make scrollable */}
-      <div className="flex-grow overflow-y-auto">
+      <div className="flex-grow overflow-y-auto space-y-4">
         {activeTab === 'presets' && <PresetsPanel />}
         {activeTab === 'modelType' && <ModelTypeSettings />}
         {activeTab === 'appearance' && <AppearanceSettings />}

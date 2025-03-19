@@ -27,9 +27,9 @@ export default function ModelTypeSettings() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 px-4">
       <h3 className="text-base font-medium">Model Type Settings</h3>
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div>
           <Tooltip content="Select the gender of your model">
             <div>

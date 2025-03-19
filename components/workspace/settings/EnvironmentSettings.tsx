@@ -22,9 +22,9 @@ export default function EnvironmentSettings() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 px-4">
       <h3 className="text-base font-medium">Environment Settings</h3>
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div>
           <Tooltip content="Select the background setting for your model">
             <div>

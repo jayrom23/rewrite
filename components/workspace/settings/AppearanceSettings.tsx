@@ -30,9 +30,9 @@ export default function AppearanceSettings() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 px-4">
       <h3 className="text-base font-medium">Appearance Settings</h3>
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div>
           <Tooltip content="Select the age range of your model">
             <div>
