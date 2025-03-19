@@ -1,12 +1,13 @@
 'use client';
 
 import Tooltip from '@/components/ui/Tooltip';
+import { forwardRef } from 'react';
 
 interface HeaderProps {
   onHelpClick?: () => void;
 }
 
-export default function Header({ onHelpClick }: HeaderProps) {
+const Header = forwardRef<HTMLHeadElement, HeaderProps>(({ onHelpClick }, ref) => {
   return (
     <header className="bg-white shadow-sm py-4 md:py-6 px-6"> {/* Added md:py-6 */}
       <div className="container mx-auto flex items-center justify-between">
@@ -35,4 +36,7 @@ export default function Header({ onHelpClick }: HeaderProps) {
       </div>
     </header>
   );
-}
+});
+
+Header.displayName = 'Header';
+export default Header;

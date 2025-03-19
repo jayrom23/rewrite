@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, forwardRef } from 'react';
 import { useGenerator } from '@/lib/context';
 import Button from '../ui/Button';
 import ExportPanel from './ExportPanel';
@@ -12,12 +12,12 @@ interface ActionBarProps {
   exportActionId?: string; // Changed to string ID
 }
 
-export default function ActionBar({
+const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(({
   exportPanelId = 'toggle-export-panel',
   showExportPanel,
   exportActionId = 'export-action'
-}: ActionBarProps) {
-  const { step, uploadedImage, isGenerating, generateImage, generatedImage, undo, reset } = useGenerator();
+}, ref) => {
+    const { step, uploadedImage, isGenerating, generateImage, generatedImage, undo, reset } = useGenerator();
 
   // Safely handle export panel actions with events
   const handleExportClick = useCallback(() => {
@@ -73,7 +73,7 @@ export default function ActionBar({
       )}
 
       {/* Action buttons - improved responsive layout */}
-      <div className="action-bar gap-2 sm:gap-4"> {/* Increased gap on larger screens */}
+      <div className="action-bar gap-2 sm:gap-4" ref={ref}> {/* Increased gap on larger screens */}
         {step === 'upload' && (
           <div className="w-full text-center py-2">
             <span className="text-sm text-gray-600">Upload an image to get started</span>
@@ -122,7 +122,7 @@ export default function ActionBar({
         )}
 
         {(step === 'customize' || step === 'export') && (
-          <Tooltip content="Start over with a new image (Ctrl+R)">
+          <Tooltip content="Start over with a new image">
             <Button
               onClick={reset}
               variant="ghost"
@@ -135,4 +135,7 @@ export default function ActionBar({
       </div>
     </>
   );
-}
+});
+
+ActionBar.displayName = 'ActionBar';
+export default ActionBar;

@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import Header from '@/components/workspace/Header';
 import ImageUploader from '@/components/workspace/ImageUploader';
 import ActionBar from '@/components/workspace/ActionBar';
 import SettingsPanel from '@/components/workspace/SettingsPanel';
 import PreviewCanvas from '@/components/workspace/PreviewCanvas';
 import HelpPanel from '@/components/ui/HelpPanel';
+import Button from '@/components/ui/Button';
+import Tooltip from '@/components/ui/Tooltip';
 import { useGenerator } from '@/lib/context';
 import useKeyboardShortcuts from '@/lib/useKeyboardShortcuts';
 
@@ -14,6 +16,29 @@ export default function Home() {
   const { step } = useGenerator();
   const [showHelpPanel, setShowHelpPanel] = useState(false);
   const [showExportPanel, setShowExportPanel] = useState(false);
+  const [availableHeight, setAvailableHeight] = useState<number | undefined>(undefined);
+  const headerRef = useRef<HTMLElement>(null);
+  const actionBarRef = useRef<HTMLElement>(null);
+  const mainContentRef = useRef<HTMLDivElement>(null);
+
+    // Calculate available height for the main content area (desktop only)
+    useEffect(() => {
+      const calculateAvailableHeight = () => {
+        if (headerRef.current && actionBarRef.current && mainContentRef.current) {
+          const headerHeight = headerRef.current.offsetHeight;
+          const actionBarHeight = actionBarRef.current.offsetHeight;
+          const windowHeight = window.innerHeight;
+          // Subtract header, action bar, and a small buffer (e.g., 20px)
+          const newAvailableHeight = windowHeight - headerHeight - actionBarHeight - 20;
+          setAvailableHeight(newAvailableHeight);
+        }
+      };
+
+      calculateAvailableHeight();
+
+      window.addEventListener('resize', calculateAvailableHeight);
+      return () => window.removeEventListener('resize', calculateAvailableHeight);
+  }, []);
 
   // Toggle help panel
   const toggleHelpPanel = useCallback(() => {
@@ -61,10 +86,25 @@ export default function Home() {
 
   return (
     <main className="flex flex-col min-h-screen">
-      <Header onHelpClick={toggleHelpPanel} />
+      <Header onHelpClick={toggleHelpPanel} ref={headerRef} />
 
-      <div className="flex-grow my-4 md:my-6 p-4 md:p-6"> {/* Added vertical margin */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-2"> {/* Responsive gap */}
+      {/* Mobile Help Button */}
+      <div className="block md:hidden fixed bottom-4 right-4 z-30">
+        <Tooltip content="Help & Keyboard Shortcuts">
+          <Button
+            variant="primary"
+            onClick={toggleHelpPanel}
+            className="rounded-full p-3 shadow-lg"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M12 21a9 9 0 100-18 9 9 0 000 18z"></path>
+            </svg>
+          </Button>
+        </Tooltip>
+      </div>
+
+      <div className="flex-grow my-4 md:my-6 p-4 md:p-6" ref={mainContentRef}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-2" style={{ height: availableHeight ? `${availableHeight}px` : 'auto' }}>
           {/* Left Column - Settings Panel */}
           <div className="md:col-span-1">
             <div className="bg-white rounded-lg shadow overflow-hidden h-full flex flex-col">
@@ -88,14 +128,14 @@ export default function Home() {
       </div>
 
       <ActionBar
+        ref={actionBarRef}
         exportActionId="export-action"
         exportPanelId="toggle-export-panel"
         showExportPanel={showExportPanel}
       />
 
-      {/* Help panel */}
-      <div className="mt-4">
-        <HelpPanel isOpen={showHelpPanel} onCloseId="close-help" />
+      <div className="mt-4 hidden md:block">
+          <HelpPanel isOpen={showHelpPanel} onCloseId="close-help" />
       </div>
     </main>
   );
