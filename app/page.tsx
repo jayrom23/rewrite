@@ -86,7 +86,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex flex-col min-h-screen">
+    <main className="flex flex-col min-h-screen my-8 p-6"> {/* Updated main element spacing */}
       <Header onHelpClick={toggleHelpPanel} ref={headerRef} />
 
       {/* Mobile Help Button */}
@@ -105,9 +105,9 @@ export default function Home() {
       </div>
 
       {/* Master container for dynamic height */}
-      <div className="flex-grow my-4 md:my-6 p-4 md:p-6" ref={mainContentRef} style={{ height: availableHeight ? `${availableHeight}px` : 'auto' }}>
+      <div className="flex-grow" ref={mainContentRef} style={{ height: availableHeight ? `${availableHeight}px` : 'auto' }}> {/* Removed my-4 md:my-6 p-4 md:p-6 from here */}
         {/* Use flex for layout, with column on small screens, row on medium+ */}
-        <div className="flex flex-col md:flex-row gap-4 sm:gap-2 h-full">
+        <div className="flex flex-col md:flex-row gap-4 sm:gap-2 md:gap-6 h-full"> {/* Updated gap on larger screens */}
 
           {/* Left Column - Settings Panel */}
           <div className="md:w-1/3 lg:w-1/4 flex-shrink-0">
@@ -136,9 +136,9 @@ export default function Home() {
         exportActionId="export-action"
         exportPanelId="toggle-export-panel"
         showExportPanel={showExportPanel}
-      />
+        />
 
-      <div className="mt-4 hidden md:block">
+      <div className="mt-4 hidden md:block"> {/* Kept mt-4 */}
           <HelpPanel isOpen={showHelpPanel} onCloseId="close-help" />
       </div>
     </main>
