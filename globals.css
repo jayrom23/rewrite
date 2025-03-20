@@ -5,8 +5,10 @@
 :root {
   --background-start: #ffffff;
   --background-end: #f5f7fa;
+  /* Reverted content width to original value */
   --content-width: min(100%, 1200px);
-  --font-scale: clamp(0.9rem, 0.85rem + 0.25vw, 1rem);
+  /* Adjusted font scale for better readability on larger screens */
+  --font-scale: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
 }
 
 /* Base styles with fluid typography */
@@ -17,19 +19,20 @@
 
   body {
     color: rgb(33, 33, 33);
+    /* Extend background to cover the entire viewport */
     background: linear-gradient(
       to bottom,
       var(--background-start),
       var(--background-end)
-    );
+    ) 0 0 / 100% 100% no-repeat;
     min-height: 100vh;
     @apply text-base antialiased;
   }
 
   /* Fluid headings */
-  h1 { @apply text-2xl md:text-3xl font-bold; }
-  h2 { @apply text-xl md:text-2xl font-semibold; }
-  h3 { @apply text-lg md:text-xl font-medium; }
+  h1 { @apply text-3xl md:text-4xl font-bold; }
+  h2 { @apply text-2xl md:text-3xl font-semibold; }
+  h3 { @apply text-xl md:text-2xl font-medium; }
 }
 
 /* Component styles */
@@ -50,24 +53,10 @@
     @apply shadow-lg;
   }
 
-  /* Button styles */
-  .btn {
-    @apply inline-flex items-center justify-center transition-all duration-200;
-  }
-
   /* Action bar styles */
   .action-bar {
-    @apply flex flex-wrap md:flex-nowrap gap-2 md:gap-4 p-3 md:p-4;
-  }
-
-  /* Preview panel styles */
-  .preview-panel {
-    @apply aspect-square md:min-h-[500px]; /* Maintain aspect ratio and min height */
-  }
-
-  /* Settings panel content styles */
-  .settings-panel-content {
-    @apply min-h-[400px]; /* Ensure settings panel has a minimum height */
+    /* Use flexbox for consistent layout */
+    @apply flex flex-wrap justify-center gap-2 p-4;
   }
 }
 
@@ -103,33 +92,14 @@
   }
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .settings-panel {
-    max-height: calc(50vh - 60px);
-    overflow-y: auto;
-  }
-
-  .mobile-hidden {
-    display: none;
-  }
-
-  .mobile-full-width {
-    width: 100% !important;
-  }
-
-  .btn-responsive {
-    @apply w-full;
-  }
-}
-
 /* Small screen adjustments */
 @media (max-width: 480px) {
   :root {
+    /* Further adjusted font scale for very small screens */
     --font-scale: clamp(0.85rem, 0.8rem + 0.25vw, 0.9rem);
   }
-
-  .action-bar {
-    @apply flex-col;
+  /* Reduce header padding on very small screens */
+  header {
+    @apply py-2;
   }
 }
