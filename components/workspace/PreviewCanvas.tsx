@@ -39,7 +39,7 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
         width = height * aspectRatio;
       }
 
-      setImageSize({ width, height });;
+      setImageSize({ width, height });
     }    updateSize();
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
