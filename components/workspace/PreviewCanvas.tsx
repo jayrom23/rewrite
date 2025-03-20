@@ -30,39 +30,17 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
       const maxWidth = container.clientWidth;
       const maxHeight = container.clientHeight;
 
-      // Use the aspect ratio prop if available, otherwise calculate from image
-      if (aspectRatio) {
-        let width = maxWidth;
-        let height = width / aspectRatio;
+      // We *always* have aspectRatio now, thanks to conditional rendering
+      let width = maxWidth;
+      let height = width / aspectRatio;
 
-        if (height > maxHeight) {
-          height = maxHeight;
-          width = height * aspectRatio;
-        }
-
-        setImageSize({ width, height });
-      } else {
-        // Fallback: If aspect ratio is not available (shouldn't happen),
-        // create a temp image and calculate (same as before).
-        const img = new Image();
-        img.onload = () => {
-          const { naturalWidth, naturalHeight } = img;
-          const ratio = naturalWidth / naturalHeight;
-
-          let width = maxWidth;
-          let height = width / ratio;
-
-          if (height > maxHeight) {
-            height = maxHeight;
-            width = height * ratio;
-          }
-          setImageSize({width, height})
-        };
-        img.src = displayImage;
+      if (height > maxHeight) {
+        height = maxHeight;
+        width = height * aspectRatio;
       }
-    };
 
-    updateSize();
+      setImageSize({ width, height });
+    }    updateSize();
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
   }, [displayImage, aspectRatio]);

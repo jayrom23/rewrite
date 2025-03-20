@@ -13,7 +13,7 @@ import { useGenerator } from '@/lib/context';
 import useKeyboardShortcuts from '@/lib/useKeyboardShortcuts';
 
 export default function Home() {
-  const { step, uploadedImage, generatedImage } = useGenerator();
+  const { step, uploadedImage, generatedImage, aspectRatio } = useGenerator();
   const [showHelpPanel, setShowHelpPanel] = useState(false);
   const [showExportPanel, setShowExportPanel] = useState(false);
   const [availableHeight, setAvailableHeight] = useState<number | undefined>(undefined);
@@ -123,7 +123,7 @@ export default function Home() {
               <div className="w-full h-full">
                 <ImageUploader />
               </div>
-            ) : (
+            ) : ( aspectRatio &&
               <PreviewCanvas  />
             )}
           </div>
