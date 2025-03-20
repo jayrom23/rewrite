@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useGenerator } from '@/lib/context';
+import { sanitizeFilename } from '@/lib/utils';
 import { exportImage, hasWebPSupport } from '@/lib/imageUtils';
 import Button from '../ui/Button';
 import Select from '../ui/Select';
@@ -58,7 +59,7 @@ export default function ExportPanel() {
         {
           quality: exportSettings.quality,
           maxWidth: exportSettings.maxWidth,
-          fileName: exportSettings.fileName,
+          fileName: sanitizeFilename(exportSettings.fileName), // Sanitize filename before export
         }
       );
 
@@ -143,7 +144,7 @@ export default function ExportPanel() {
             value={exportSettings.fileName}
             onChange={(e) => setExportSettings({
               ...exportSettings,
-              fileName: e.target.value
+              fileName: sanitizeFilename(e.target.value) // Sanitize filename on input change
             })}
             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
           />
