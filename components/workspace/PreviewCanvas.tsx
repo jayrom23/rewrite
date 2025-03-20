@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useGenerator } from '@/lib/context';
 import GenerationStatus from './GenerationStatus';
 import ProgressiveImage from './ProgressiveImage';
+import { useAnimation } from '@/lib/animationContext';
 
 interface PreviewCanvasProps {
   className?: string;
@@ -15,6 +16,7 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
+  const { animationClasses } = useAnimation();
 
   // Image to display based on the current state
   const displayImage = generatedImage || uploadedImage;
@@ -30,7 +32,9 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
       const maxWidth = container.clientWidth;
       const maxHeight = container.clientHeight;
 
-      // We *always* have aspectRatio now, thanks to conditional rendering
+      // Add safety check for aspectRatio
+      if (!aspectRatio) return;
+
       let width = maxWidth;
       let height = width / aspectRatio;
 
@@ -40,7 +44,9 @@ export default function PreviewCanvas({ className = '' }: PreviewCanvasProps) {
       }
 
       setImageSize({ width, height });
-    }    updateSize();
+    };
+    
+    updateSize();
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
   }, [displayImage, aspectRatio]);
