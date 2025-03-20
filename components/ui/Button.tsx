@@ -37,11 +37,11 @@ export default function Button({
 
   // Variant classes
   const variantClasses = {
-    primary: 'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-sm',
-    secondary: 'bg-secondary-200 text-secondary-900 hover:bg-secondary-300 active:bg-secondary-400 focus:ring-2 focus:ring-secondary-300 focus:ring-offset-2',
-    outline: 'bg-white border border-primary-600 text-primary-600 hover:bg-primary-50 active:bg-primary-100',
-    ghost: 'bg-transparent text-primary-600 hover:bg-primary-50 active:bg-primary-100',
-    danger: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-offset-2',
+    primary: 'bg-primary-600 text-white hover:bg-primary-700 focus:bg-primary-700 active:bg-primary-800 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-sm',
+    secondary: 'bg-secondary-200 text-secondary-900 hover:bg-secondary-300 focus:bg-secondary-300 active:bg-secondary-400 focus:ring-2 focus:ring-secondary-300 focus:ring-offset-2',
+    outline: 'bg-white border border-primary-600 text-primary-600 hover:bg-primary-50 focus:bg-primary-50 active:bg-primary-100',
+    ghost: 'bg-transparent text-primary-600 hover:bg-primary-50 focus:bg-primary-50 active:bg-primary-100',
+    danger: 'bg-red-600 text-white hover:bg-red-700 focus:bg-red-700 active:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-offset-2',
   };
 
   // Loading and disabled states
