@@ -37,3 +37,6 @@ yarn-error.log*
 # OS files
 .DS_Store
 .aider*
+.venv
+.next
+.eslint*
