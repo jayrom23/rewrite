@@ -6,7 +6,27 @@ export type ShortcutAction =
   | 'undo'
   | 'reset'
   | 'toggleHelp'
-  | 'export';
+  | 'export'
+  | 'setting1'
+  | 'setting2'
+  | 'setting3'
+  | 'setting4'
+  | 'setting5'
+  | 'setting6'
+  | 'setting7'
+  | 'setting8'
+  | 'setting9'
+  | 'setting10'
+  | 'F1'
+  | 'F2'
+  | 'F3'
+  | 'F4'
+  | 'F5'
+  | 'F6'
+  | 'F7'
+  | 'F8'
+  | 'F9'
+  | 'F10';
 
 export interface KeyboardShortcut {
   key: string;
@@ -22,8 +42,28 @@ export const KEYBOARD_SHORTCUTS: KeyboardShortcut[] = [
   { key: 'g', ctrlKey: true, description: 'Generate image', action: 'generate' },
   { key: 'z', ctrlKey: true, description: 'Undo last action', action: 'undo' },
   { key: 'r', ctrlKey: true, description: 'Reset and start over', action: 'reset' },
-  { key: '/', description: 'Toggle help', action: 'toggleHelp' },
+  { key: '/', description: 'Toggle help panel', action: 'toggleHelp' },
   { key: 'e', ctrlKey: true, description: 'Export generated image', action: 'export' },
+  { key: '1', ctrlKey: true, description: 'Setting action 1', action: 'setting1' },
+  { key: '2', ctrlKey: true, description: 'Setting action 2', action: 'setting2' },
+  { key: '3', ctrlKey: true, description: 'Setting action 3', action: 'setting3' },
+  { key: '4', ctrlKey: true, description: 'Setting action 4', action: 'setting4' },
+  { key: '5', ctrlKey: true, description: 'Setting action 5', action: 'setting5' },
+  { key: '6', ctrlKey: true, description: 'Setting action 6', action: 'setting6' },
+  { key: '7', ctrlKey: true, description: 'Setting action 7', action: 'setting7' },
+  { key: '8', ctrlKey: true, description: 'Setting action 8', action: 'setting8' },
+  { key: '9', ctrlKey: true, description: 'Setting action 9', action: 'setting9' },
+  { key: '0', ctrlKey: true, description: 'Setting action 10', action: 'setting10' },
+  { key: 'F1', description: 'Function action 1', action: 'F1' },
+  { key: 'F2', description: 'Function action 2', action: 'F2' },
+  { key: 'F3', description: 'Function action 3', action: 'F3' },
+  { key: 'F4', description: 'Function action 4', action: 'F4' },
+  { key: 'F5', description: 'Function action 5', action: 'F5' },
+  { key: 'F6', description: 'Function action 6', action: 'F6' },
+  { key: 'F7', description: 'Function action 7', action: 'F7' },
+  { key: 'F8', description: 'Function action 8', action: 'F8' },
+  { key: 'F9', description: 'Function action 9', action: 'F9' },
+  { key: 'F10', description: 'Function action 10', action: 'F10' },
 ];
 
 export default function useKeyboardShortcuts(
